@@ -1,3 +1,5 @@
+import { initPaint } from './paint';
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -86,41 +88,8 @@ videos.forEach((v) => {
   );
 });
 
-// Pause the hero video when it scrolls away (saves battery on laptops).
-const heroVideo = document.querySelector<HTMLVideoElement>('.hero video');
-if (heroVideo) {
-  if (reduceMotion) heroVideo.pause();
-  new IntersectionObserver(([e]) => {
-    if (reduceMotion) return;
-    e.isIntersecting ? heroVideo.play().catch(() => {}) : heroVideo.pause();
-  }).observe(heroVideo);
-}
-
-// Cursor glow.
-const glow = document.querySelector<HTMLElement>('.glow');
-if (glow && canHover && !reduceMotion) {
-  let x = 0,
-    y = 0,
-    gx = 0,
-    gy = 0,
-    raf = 0;
-  const tick = () => {
-    gx += (x - gx) * 0.12;
-    gy += (y - gy) * 0.12;
-    glow.style.setProperty('--gx', `${gx}px`);
-    glow.style.setProperty('--gy', `${gy}px`);
-    raf = Math.abs(x - gx) + Math.abs(y - gy) > 0.5 ? requestAnimationFrame(tick) : 0;
-  };
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      x = e.clientX;
-      y = e.clientY;
-      if (!raf) raf = requestAnimationFrame(tick);
-    },
-    { passive: true },
-  );
-}
+// Live generative paintings.
+initPaint();
 
 // Live Taipei clock in the hero.
 const clock = document.querySelector<HTMLElement>('[data-clock]');

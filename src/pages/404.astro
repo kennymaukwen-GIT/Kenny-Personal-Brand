@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import LazyVideo from '../components/LazyVideo.astro';
-import { clips } from '../config/media';
+import PaintCanvas from '../components/PaintCanvas.astro';
 import { t } from '../i18n';
 
 const d = t('en').notFound;
@@ -9,8 +8,8 @@ const d = t('en').notFound;
 
 <Base lang="en" path="/404" title={d.title}>
   <section class="nf">
-    <div class="bg" aria-hidden="true"><LazyVideo src={clips.door.src} /></div>
-    <div class="wrap">
+    <PaintCanvas interactive seed={40.4} scale={1.2} />
+    <div class="wrap label-card inner">
       <p class="kicker">404</p>
       <h1 class="h-xl">{d.title}</h1>
       <p class="lead">{d.body}</p>
@@ -28,13 +27,14 @@ const d = t('en').notFound;
     align-items: center;
     overflow: hidden;
   }
-  .bg {
-    position: absolute;
-    inset: 0;
+  .nf :global(.paint-wrap) {
     z-index: -1;
-    opacity: 0.4;
   }
-  .wrap {
+  .inner {
+    width: auto;
+    max-width: 640px;
+    margin-left: var(--gutter);
+    padding: 32px;
     display: grid;
     gap: 24px;
     justify-items: start;

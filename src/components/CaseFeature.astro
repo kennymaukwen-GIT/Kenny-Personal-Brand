@@ -1,8 +1,6 @@
 ---
 import type { Lang } from '../config/site';
-import { clips } from '../config/media';
 import { t, localePath } from '../i18n';
-import LazyVideo from './LazyVideo.astro';
 
 interface Props {
   lang: Lang;
@@ -12,10 +10,8 @@ const d = t(lang).caseFeature;
 ---
 
 <section class="section case" id="case">
-  <div class="bg" aria-hidden="true">
-    <LazyVideo src={clips.concept.src} />
-    <div class="bg-shade"></div>
-  </div>
+  <div class="blob b1" aria-hidden="true"></div>
+  <div class="blob b2" aria-hidden="true"></div>
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
     <h2 class="h-lg title reveal" style="--d:.1s">{d.title}</h2>
@@ -25,7 +21,9 @@ const d = t(lang).caseFeature;
       {
         d.stats.map((s, i) => (
           <div class="stat reveal" style={`--d:${0.1 + i * 0.1}s`}>
-            <span class="value">{s.value}</span>
+            <span class="value" style={`color:var(--p${i + 1})`}>
+              {s.value}
+            </span>
             <span class="label">{s.label}</span>
           </div>
         ))
@@ -33,9 +31,9 @@ const d = t(lang).caseFeature;
     </div>
 
     <div class="foot reveal">
-      <p class="quote serif">“{d.thesis}”</p>
+      <p class="quote h-md it">“{d.thesis}”</p>
       <div class="foot-right">
-        <a class="btn btn-ghost" href={localePath(lang, '/work/hsinchu-car-dealer')}>
+        <a class="btn btn-primary" href={localePath(lang, '/work/hsinchu-car-dealer')}>
           {d.cta} <span class="arrow">→</span>
         </a>
         <p class="note muted">{d.note}</p>
@@ -48,35 +46,49 @@ const d = t(lang).caseFeature;
   .case {
     overflow: hidden;
     isolation: isolate;
+    background: var(--paper-2);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
   }
-  .bg {
+  .blob {
     position: absolute;
-    inset: 0;
     z-index: -1;
+    border-radius: 50%;
+    filter: blur(60px);
     opacity: 0.35;
+    transition: background 1s;
   }
-  .bg-shade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, var(--bg) 0%, rgba(5, 6, 8, 0.7) 30%, rgba(5, 6, 8, 0.7) 70%, var(--bg) 100%);
+  .b1 {
+    width: 46vw;
+    height: 46vw;
+    right: -12vw;
+    top: -10vw;
+    background: var(--p1);
+  }
+  .b2 {
+    width: 30vw;
+    height: 30vw;
+    right: 18vw;
+    bottom: -14vw;
+    background: var(--p3);
   }
   .wrap {
     display: grid;
     gap: 28px;
   }
   .title {
-    max-width: 16ch;
+    max-width: 15ch;
   }
   .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--line-strong);
+    border-top: 1px solid var(--ink);
     margin-top: 24px;
   }
   .stat {
-    padding: 32px 24px 32px 0;
+    padding: 28px 24px 28px 0;
     display: grid;
-    gap: 10px;
+    gap: 8px;
     border-right: 1px solid var(--line);
   }
   .stat:not(:first-child) {
@@ -86,17 +98,14 @@ const d = t(lang).caseFeature;
     border-right: 0;
   }
   .value {
-    font-size: clamp(48px, 7vw, 104px);
-    font-weight: 600;
-    letter-spacing: -0.05em;
-    line-height: 1;
-    background: linear-gradient(180deg, #fff, var(--beacon));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-family: var(--font-display);
+    font-size: clamp(64px, 9vw, 140px);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    transition: color 1s;
   }
   .label {
-    color: var(--fg-2);
+    color: var(--ink-2);
     font-size: 15px;
     max-width: 22ch;
   }
@@ -109,10 +118,7 @@ const d = t(lang).caseFeature;
     margin-top: 24px;
   }
   .quote {
-    font-size: clamp(28px, 3.6vw, 48px);
-    line-height: 1.15;
-    margin: 0;
-    max-width: 20ch;
+    max-width: 18ch;
   }
   .foot-right {
     display: grid;
@@ -129,7 +135,7 @@ const d = t(lang).caseFeature;
     }
     .stat,
     .stat:not(:first-child) {
-      padding: 24px 0;
+      padding: 22px 0;
       border-right: 0;
       border-bottom: 1px solid var(--line);
     }

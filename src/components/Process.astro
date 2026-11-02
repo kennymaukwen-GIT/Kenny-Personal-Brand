@@ -37,42 +37,63 @@ const d = t(Astro.props.lang).process;
     margin: 40px 0 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    counter-reset: step;
+    border-top: 1.5px solid var(--ink);
   }
   .step {
-    position: relative;
-    padding: 28px 24px 32px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(17, 20, 27, 0.8), rgba(17, 20, 27, 0.2));
+    padding: 28px 24px 8px 0;
     display: grid;
-    gap: 14px;
+    gap: 12px;
     align-content: start;
-    transition: border-color 0.4s, transform 0.5s var(--ease);
+    border-right: 1px solid var(--line);
   }
-  .step:hover {
-    border-color: rgba(91, 140, 255, 0.5);
-    transform: translateY(-4px);
+  .step:not(:first-child) {
+    padding-left: 24px;
+  }
+  .step:last-child {
+    border-right: 0;
   }
   .n {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--accent-2);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 64px;
+    line-height: 0.8;
+    color: var(--p1);
+    transition: color 1s;
+  }
+  .step:nth-child(2) .n {
+    color: var(--p2);
+  }
+  .step:nth-child(3) .n {
+    color: var(--p3);
+  }
+  .step:nth-child(4) .n {
+    color: var(--p4);
   }
   .step p {
     margin: 0;
-    color: var(--fg-2);
+    color: var(--ink-2);
     font-size: 15px;
   }
   @media (max-width: 960px) {
     .steps {
       grid-template-columns: 1fr 1fr;
     }
+    .step:nth-child(3) {
+      padding-left: 0;
+    }
+    .step:nth-child(2) {
+      border-right: 0;
+    }
   }
   @media (max-width: 520px) {
     .steps {
       grid-template-columns: 1fr;
+    }
+    .step,
+    .step:not(:first-child) {
+      padding: 22px 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
     }
   }
 </style>

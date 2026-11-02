@@ -1,7 +1,8 @@
 ---
 import { site, type Lang } from '../config/site';
-import { heroClip } from '../config/media';
 import { t } from '../i18n';
+import { palettes } from '../scripts/paint';
+import PaintCanvas from './PaintCanvas.astro';
 
 interface Props {
   lang: Lang;
@@ -11,34 +12,50 @@ const d = t(lang).hero;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media" aria-hidden="true">
-    <video class="vid" src={heroClip.src} autoplay muted loop playsinline preload="auto"></video>
-    <div class="shade"></div>
-  </div>
+  <PaintCanvas interactive seed={1.7} scale={1.7} quality={0.6} />
 
-  <div class="wrap hero-inner in" data-hero>
+  <div class="wrap top">
     <p class="kicker reveal">{d.eyebrow}</p>
-    <h1 id="hero-title" class="h-xl hero-title">
-      {
-        d.title.map((word, i) => (
-          <span class="split-line" style={`--d:${0.15 + i * 0.12}s`}>
-            <span class={i === 1 ? 'serif latin grad' : ''}>{word}</span>
-          </span>
-        ))
-      }
-    </h1>
-    <p class="lead reveal" style="--d:.6s">{d.sub}</p>
-    <div class="ctas reveal" style="--d:.75s">
-      <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
-        {d.primary} <span class="arrow">→</span>
-      </a>
-      <a class="btn btn-ghost" href="#work">{d.secondary}</a>
-    </div>
+    <span class="clock" data-clock>Taipei —:—:—</span>
   </div>
 
-  <div class="wrap hero-bar">
-    <span class="scroll"><span class="line"></span>{d.scroll}</span>
-    <span class="clock" data-clock>Taipei —:—:—</span>
+  <div class="wrap stage">
+  <h1 id="hero-title" class="h-xl title">
+    {
+      d.title.map((word, i) => (
+        <span class="split-line" style={`--d:${0.15 + i * 0.14}s`}>
+          <span class={i === 1 ? 'it latin' : ''}>{word}</span>
+        </span>
+      ))
+    }
+  </h1>
+
+    <div class="label-card card reveal" style="--d:.7s">
+      <p class="artwork"><em>{d.artwork}</em></p>
+      <p class="medium muted">{d.medium}</p>
+      <p class="sub">{d.sub}</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
+          {d.primary} <span class="arrow">→</span>
+        </a>
+        <a class="btn btn-ghost" href="#work">{d.secondary}</a>
+      </div>
+      <div class="palette" role="group" aria-label={d.palette}>
+        <span class="muted">{d.palette}</span>
+        {
+          Object.entries(palettes).map(([key, p]) => (
+            <button type="button" class="swatch" data-palette-set={key} aria-pressed={key === 'ultramarine' ? 'true' : 'false'} title={p.name}>
+              <span class="chips" aria-hidden="true">
+                {p.colors.slice(0, 3).map((c) => (
+                  <i style={`background:${c}`} />
+                ))}
+              </span>
+              <span class="name">{p.name}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>
 
@@ -46,85 +63,154 @@ const d = t(lang).hero;
   .hero {
     position: relative;
     min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 104px 0 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding: 92px 0 32px;
     overflow: hidden;
     isolation: isolate;
+    background: var(--paper);
   }
-  .hero-media {
-    position: absolute;
-    inset: 0;
+  .hero :global(.paint-wrap) {
     z-index: -1;
-    background: radial-gradient(ellipse at 70% 40%, #12204a 0%, var(--bg) 60%);
   }
-  .hero-media video {
-    opacity: 0.85;
-    transform: scale(1.04);
-  }
-  .shade {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(90deg, rgba(5, 6, 8, 0.92) 0%, rgba(5, 6, 8, 0.55) 45%, rgba(5, 6, 8, 0.1) 100%),
-      linear-gradient(0deg, var(--bg) 0%, rgba(5, 6, 8, 0) 40%);
-  }
-  .hero-inner {
+  .top {
     display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding-bottom: 44px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
   }
-  .hero-title {
-    font-size: clamp(60px, min(13vw, 16.5vh), 200px);
+  .top .kicker,
+  .top .clock {
+    background: var(--paper-3);
+    color: var(--ink);
+    mix-blend-mode: normal;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
   }
-  .hero-title .serif {
-    padding-right: 0.06em;
+  .stage {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    padding-top: 24px;
+  }
+  .title {
+    font-size: clamp(76px, min(14vw, 24vh), 240px);
+    line-height: 0.84;
+    color: #fff;
+    mix-blend-mode: difference;
+    margin: 0;
+  }
+  .title .it {
+    padding-left: 0.5em;
+  }
+  .card {
+    flex: 0 0 auto;
+    width: min(100%, 460px);
+    padding: 22px 24px 20px;
+    display: grid;
+    gap: 10px;
+  }
+  .artwork {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 1.1;
+  }
+  .medium {
+    margin: 0;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+  .sub {
+    margin: 6px 0 4px;
+    color: var(--ink-2);
+    font-size: 16px;
+    line-height: 1.55;
   }
   .ctas {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
   }
-  .hero-bar {
+  .ctas .btn {
+    height: 46px;
+    padding: 0 20px;
+    font-size: 15px;
+  }
+  .palette {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
-    padding-top: 20px;
-    padding-bottom: 28px;
+    gap: 6px 8px;
+    margin-top: 8px;
+    padding-top: 12px;
     border-top: 1px solid var(--line);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+  .palette > .muted {
+    margin-right: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .swatch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 6px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .swatch:hover {
+    border-color: var(--line-strong);
+  }
+  .swatch[aria-pressed='true'] {
+    border-color: var(--ink);
+    background: var(--paper);
+  }
+  .chips {
+    display: inline-flex;
+  }
+  .chips i {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: -4px;
+    border: 1.5px solid var(--paper-3);
+  }
+  .clock {
     font-family: var(--font-mono);
     font-size: 12px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--muted);
+    white-space: nowrap;
   }
-  .scroll {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .line {
-    width: 40px;
-    height: 1px;
-    background: var(--muted);
-    position: relative;
-    overflow: hidden;
-  }
-  .line::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--fg);
-    animation: sweep 2.2s var(--ease) infinite;
-  }
-  @keyframes sweep {
-    from {
-      transform: translateX(-100%);
+  @media (max-width: 1000px) {
+    .stage {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
     }
-    to {
-      transform: translateX(100%);
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding-top: 84px;
+    }
+    .title {
+      font-size: clamp(64px, 21vw, 120px);
+    }
+    .clock {
+      display: none;
+    }
+    .card {
+      padding: 18px;
     }
   }
 </style>

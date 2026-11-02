@@ -1,18 +1,18 @@
 ---
 import type { Lang } from '../config/site';
-import { clips, type Clip } from '../config/media';
 import { t } from '../i18n';
-import LazyVideo from './LazyVideo.astro';
+import PaintCanvas from './PaintCanvas.astro';
 
 interface Props {
   lang: Lang;
 }
 const d = t(Astro.props.lang).pillars;
-const clipFor: Record<string, Clip> = {
-  seen: clips.chrome,
-  found: clips.network,
-  used: clips.orrery,
-};
+// Each pillar is its own living painting: different seed, zoom and dominant pigment.
+const art = [
+  { seed: 4.2, shift: 0, scale: 1.6 },
+  { seed: 9.1, shift: 1, scale: 1.0 },
+  { seed: 14.6, shift: 2, scale: 2.3 },
+];
 ---
 
 <section class="section pillars" id="what">
@@ -22,10 +22,15 @@ const clipFor: Record<string, Clip> = {
       {
         d.items.map((p, i) => (
           <article class={`pillar ${i % 2 ? 'flip' : ''}`}>
-            <div class="media reveal">
-              <LazyVideo src={clipFor[p.key].src} />
-              <span class="tag">{p.label}</span>
-            </div>
+            <figure class="frame reveal">
+              <div class="canvas">
+                <PaintCanvas seed={art[i].seed} shift={art[i].shift} scale={art[i].scale} quality={0.85} />
+              </div>
+              <figcaption>
+                <span>{p.label}</span>
+                <span class="muted">Pigment, WebGL — live</span>
+              </figcaption>
+            </figure>
             <div class="text">
               <h3 class="h-lg reveal">{p.title}</h3>
               <p class="lead reveal" style="--d:.1s">
@@ -52,41 +57,42 @@ const clipFor: Record<string, Clip> = {
   }
   .pillar {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: clamp(32px, 5vw, 80px);
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
     align-items: center;
   }
-  .pillar.flip .media {
+  .pillar.flip .frame {
     order: 2;
   }
-  .media {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--surface);
+  .frame {
+    margin: 0;
+    padding: clamp(14px, 2vw, 24px);
+    background: var(--paper-3);
     border: 1px solid var(--line);
+    box-shadow: 0 30px 60px -36px rgba(20, 17, 22, 0.45);
+    transform: rotate(-0.6deg);
   }
-  .tag {
-    position: absolute;
-    left: 16px;
-    top: 16px;
+  .pillar.flip .frame {
+    transform: rotate(0.8deg);
+  }
+  .canvas {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
     font-family: var(--font-mono);
     font-size: 12px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: rgba(5, 6, 8, 0.6);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--line-strong);
   }
   .text {
     display: grid;
     gap: 24px;
-  }
-  .text .h-lg {
-    font-size: clamp(34px, 4.6vw, 64px);
   }
   ul {
     list-style: none;
@@ -94,26 +100,30 @@ const clipFor: Record<string, Clip> = {
     padding: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--ink);
   }
   li {
     padding: 14px 0;
     border-bottom: 1px solid var(--line);
     font-size: 15px;
-    color: var(--fg-2);
+    color: var(--ink-2);
   }
   li::before {
-    content: '+ ';
-    color: var(--accent);
-    font-family: var(--font-mono);
+    content: '● ';
+    color: var(--p2);
+    font-size: 10px;
+    vertical-align: 2px;
+    transition: color 1s;
   }
   @media (max-width: 860px) {
     .pillar {
       grid-template-columns: 1fr;
     }
-    .pillar.flip .media {
+    .pillar.flip .frame {
       order: 0;
+    }
+    .canvas {
+      aspect-ratio: 4 / 3;
     }
   }
   @media (max-width: 420px) {

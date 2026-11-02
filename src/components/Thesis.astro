@@ -12,7 +12,7 @@ const d = t(Astro.props.lang).thesis;
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
     <h2 class="h-lg statement reveal" style="--d:.1s">
-      {d.line} <span class="serif grad">{d.accent}</span>
+      {d.line} <span class="stroke it">{d.accent}</span>
     </h2>
     <p class="lead reveal" style="--d:.2s">{d.body}</p>
   </div>
@@ -24,6 +24,6 @@ const d = t(Astro.props.lang).thesis;
     gap: 32px;
   }
   .statement {
-    max-width: 18ch;
+    max-width: 17ch;
   }
 </style>

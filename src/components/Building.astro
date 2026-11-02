@@ -1,8 +1,7 @@
 ---
 import type { Lang } from '../config/site';
-import { clips } from '../config/media';
 import { t } from '../i18n';
-import LazyVideo from './LazyVideo.astro';
+import PaintCanvas from './PaintCanvas.astro';
 
 interface Props {
   lang: Lang;
@@ -13,8 +12,13 @@ const d = t(Astro.props.lang).building;
 <section class="section building" id="building">
   <div class="wrap">
     <div class="card reveal">
-      <div class="media" aria-hidden="true">
-        <LazyVideo src={clips.orrery.src} />
+      <div class="media">
+        <PaintCanvas seed={22.3} shift={3} scale={0.9} quality={0.7} />
+        <div class="app" aria-hidden="true">
+          <span class="slot s1"></span>
+          <span class="slot s2"></span>
+          <span class="slot s3"></span>
+        </div>
       </div>
       <div class="body">
         <p class="kicker">{d.kicker}</p>
@@ -31,20 +35,52 @@ const d = t(Astro.props.lang).building;
   .card {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border: 1px solid var(--line);
-    border-radius: 28px;
-    overflow: hidden;
-    background: var(--bg-2);
+    border: 1.5px solid var(--ink);
+    background: var(--paper-3);
   }
   .media {
     position: relative;
-    min-height: 420px;
+    min-height: 460px;
+    border-right: 1.5px solid var(--ink);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
   }
-  .media::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent 50%, var(--bg-2));
+  /* A tiny abstract "calendar" floating over the paint */
+  .app {
+    position: relative;
+    width: min(62%, 260px);
+    aspect-ratio: 9 / 16;
+    border-radius: 28px;
+    background: rgba(246, 241, 232, 0.86);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid var(--ink);
+    box-shadow: 0 30px 60px -30px rgba(20, 17, 22, 0.6);
+    padding: 22% 12% 0;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    transform: rotate(-4deg);
+  }
+  .slot {
+    height: 34px;
+    border-radius: 10px;
+    transition: background 1s;
+  }
+  .s1 {
+    background: var(--p1);
+    width: 80%;
+  }
+  .s2 {
+    background: var(--p2);
+    width: 55%;
+    margin-left: 30%;
+    height: 56px;
+  }
+  .s3 {
+    background: var(--p3);
+    width: 70%;
+    margin-left: 10%;
   }
   .body {
     padding: clamp(32px, 5vw, 64px);
@@ -63,22 +99,21 @@ const d = t(Astro.props.lang).building;
     text-transform: uppercase;
     padding: 8px 14px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 181, 71, 0.4);
-    color: var(--beacon);
+    border: 1px solid var(--ink);
   }
   .pulse {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: var(--beacon);
+    background: var(--p2);
     animation: pulse 1.8s ease-out infinite;
   }
   @keyframes pulse {
     0% {
-      box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.6);
+      box-shadow: 0 0 0 0 rgba(226, 65, 43, 0.5);
     }
     100% {
-      box-shadow: 0 0 0 12px rgba(255, 181, 71, 0);
+      box-shadow: 0 0 0 12px rgba(226, 65, 43, 0);
     }
   }
   @media (max-width: 860px) {
@@ -86,10 +121,12 @@ const d = t(Astro.props.lang).building;
       grid-template-columns: 1fr;
     }
     .media {
-      min-height: 260px;
+      min-height: 380px;
+      border-right: 0;
+      border-bottom: 1.5px solid var(--ink);
     }
-    .media::after {
-      background: linear-gradient(180deg, transparent 50%, var(--bg-2));
+    .app {
+      width: 150px;
     }
   }
 </style>

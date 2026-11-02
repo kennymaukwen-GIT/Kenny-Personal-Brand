@@ -19,6 +19,9 @@ export const en = {
     primary: 'Book a 30-min diagnosis',
     secondary: 'See the reel',
     scroll: 'Scroll',
+    artwork: 'Untitled (Seen. Found. Used.)',
+    medium: 'Live generative pigment on screen, 2026. Move to stir the paint.',
+    palette: 'Palette',
   },
   marquee: [
     'Web Design',
@@ -80,6 +83,7 @@ export const en = {
     kicker: 'Reel',
     title: 'Every frame directed here. Generated with AI.',
     sub: 'Sci-fi, surreal, commercial, fashion, Eastern art. Hover to play.',
+    medium: 'AI film, 8 s',
   },
   pricing: {
     kicker: 'Services & pricing',

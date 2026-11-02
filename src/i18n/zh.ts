@@ -21,6 +21,9 @@ export const zh: Dict = {
     primary: '預約 30 分鐘診斷',
     secondary: '看作品',
     scroll: '往下',
+    artwork: '無題（Seen. Found. Used.）',
+    medium: '螢幕上的即時生成顏料，2026。移動滑鼠即可攪動顏料。',
+    palette: '色盤',
   },
   marquee: ['網站設計', 'UI / UX', '動態設計', 'AI 影片', 'AI 廣告', 'AI 視覺', 'AI SEO', 'App 設計', '客製軟體'],
   thesis: {
@@ -72,6 +75,7 @@ export const zh: Dict = {
     kicker: '作品',
     title: '每一格畫面都由我們導演，用 AI 生成。',
     sub: '科幻、超現實、商業廣告、時尚、東方藝術。滑鼠移上去即可播放。',
+    medium: 'AI 影片，8 秒',
   },
   pricing: {
     kicker: '服務與價格',

@@ -68,7 +68,7 @@ const allLd = [orgLd, ...jsonLd];
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="zh-Hant-TW" href={zhUrl} />
     <link rel="alternate" hreflang="x-default" href={enUrl} />
-    <meta name="theme-color" content="#050608" />
+    <meta name="theme-color" content="#eee7da" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -84,14 +84,19 @@ const allLd = [orgLd, ...jsonLd];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href={`https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1${lang === 'zh-tw' ? '&family=Noto+Sans+TC:wght@400;500;700' : ''}&display=swap`}
+      href={`https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1${lang === 'zh-tw' ? '&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700' : ''}&display=swap`}
     />
     {preloadVideo && <link rel="preconnect" href={new URL(preloadVideo).origin} crossorigin />}
 
     {allLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
   </head>
   <body data-lang={lang}>
-    <div class="glow" aria-hidden="true"></div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <filter id="rough" x="-10%" y="-30%" width="120%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035 0.09" numOctaves="3" seed="3" />
+        <feDisplacementMap in="SourceGraphic" scale="9" />
+      </filter>
+    </svg>
     <Nav lang={lang} path={path} />
     <main id="main">
       <slot />

@@ -14,7 +14,7 @@ const social = Object.entries(site.social).filter(([, url]) => url);
 
 <footer class="footer">
   <div class="wrap">
-    <div class="giant" aria-hidden="true">{site.tagline}</div>
+    <div class="giant" aria-hidden="true"><span>Seen.</span> <span class="it">Found.</span> <span>Used.</span></div>
     <div class="row">
       <div class="col">
         <strong>{site.name}</strong>
@@ -38,44 +38,63 @@ const social = Object.entries(site.social).filter(([, url]) => url);
   .footer {
     position: relative;
     z-index: 2;
-    border-top: 1px solid var(--line);
-    padding: 72px 0 40px;
+    border-top: 1.5px solid var(--ink);
+    padding: 64px 0 36px;
     overflow: hidden;
+    background: var(--paper-3);
   }
   .giant {
-    font-size: clamp(44px, 11.5vw, 176px);
-    font-weight: 600;
-    letter-spacing: -0.05em;
+    font-family: var(--font-display);
+    font-size: clamp(56px, 13.5vw, 220px);
     line-height: 0.9;
+    letter-spacing: -0.03em;
     white-space: nowrap;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
     margin-bottom: 56px;
+  }
+  .giant span:nth-child(1) {
+    color: var(--p1);
+  }
+  .giant span:nth-child(2) {
+    color: var(--p2);
+  }
+  .giant span:nth-child(3) {
+    color: var(--p3);
+  }
+  .giant span {
+    transition: color 1s;
   }
   .row {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
   .col {
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
+  .col strong {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 26px;
+  }
   .links {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 24px;
     text-transform: capitalize;
-    color: var(--fg-2);
+  }
+  .links a,
+  .col a {
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 4px;
   }
   .links a:hover,
   .col a:hover {
-    color: var(--accent-2);
+    text-decoration-color: var(--p2);
   }
   .small {
     font-size: 14px;
@@ -87,10 +106,9 @@ const social = Object.entries(site.social).filter(([, url]) => url);
     gap: 8px;
   }
   .dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #3ddc84;
-    box-shadow: 0 0 10px #3ddc84;
+    background: var(--p2);
   }
 </style>

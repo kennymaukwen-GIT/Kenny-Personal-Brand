@@ -1,0 +1,34 @@
+---
+// A live generative painting (see src/scripts/paint.ts).
+interface Props {
+  seed?: number;
+  /** Rotates which pigment dominates, so canvases on one page differ. */
+  shift?: number;
+  /** Zoom of the pattern: lower = bigger shapes. */
+  scale?: number;
+  /** Render resolution (0–1). Lower is faster and softer. */
+  quality?: number;
+  interactive?: boolean;
+  class?: string;
+}
+const { seed = 0, shift = 0, scale = 1.4, quality = 0.5, interactive = false, class: cls = '' } = Astro.props;
+---
+
+<div class:list={['paint-wrap', cls]} data-paint-wrap aria-hidden="true">
+  <canvas
+    class="paint"
+    data-paint
+    data-seed={seed}
+    data-shift={shift}
+    data-scale={scale}
+    data-quality={quality}
+    data-interactive={interactive ? '' : undefined}></canvas>
+</div>
+
+<style>
+  .paint-wrap {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+</style>
