@@ -17,7 +17,7 @@ import {
 const VERT = /* glsl */ `
 uniform float uTime;
 uniform float uIntro;    // 0→1 assembling from the cloud on load
-uniform float uMorph;    // 0..4: sphere → word1 → … → word4
+uniform float uMorph;    // 0..6: sphere → word1 → … → word6
 uniform float uExplode;  // 0→1 at the end of the hero
 uniform float uSpin;
 uniform float uPixel;
@@ -26,6 +26,8 @@ attribute vec3 aS1;
 attribute vec3 aS2;
 attribute vec3 aS3;
 attribute vec3 aS4;
+attribute vec3 aS5;
+attribute vec3 aS6;
 attribute float aRand;
 varying float vAlpha;
 varying float vTint;
@@ -43,10 +45,18 @@ void main(){
   float m2 = stagger(clamp(uMorph - 1.0, 0.0, 1.0));
   float m3 = stagger(clamp(uMorph - 2.0, 0.0, 1.0));
   float m4 = stagger(clamp(uMorph - 3.0, 0.0, 1.0));
-  vec3 p = mix(mix(mix(mix(sphere, aS1, m1), aS2, m2), aS3, m3), aS4, m4);
+  float m5 = stagger(clamp(uMorph - 4.0, 0.0, 1.0));
+  float m6 = stagger(clamp(uMorph - 5.0, 0.0, 1.0));
+  vec3 p = mix(sphere, aS1, m1);
+  p = mix(p, aS2, m2);
+  p = mix(p, aS3, m3);
+  p = mix(p, aS4, m4);
+  p = mix(p, aS5, m5);
+  p = mix(p, aS6, m6);
 
   // Particles swoop along an arc while travelling between shapes.
-  float travel = sin(m1 * 3.14159) + sin(m2 * 3.14159) + sin(m3 * 3.14159) + sin(m4 * 3.14159);
+  float pi = 3.14159;
+  float travel = sin(m1*pi) + sin(m2*pi) + sin(m3*pi) + sin(m4*pi) + sin(m5*pi) + sin(m6*pi);
   p += normalize(aStart) * travel * (0.35 + aRand * 0.6);
 
   // Assemble from the scattered cloud on load.
@@ -121,7 +131,10 @@ export type GlobeController = {
   count: number;
 };
 
-export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.', 'USED.', 'SCALED.']): GlobeController | null {
+const DEFAULT_WORDS = ['WEBSITES', 'APPS', 'FILMS', 'SOFTWARE', 'AGENTS', 'ANYTHING.'];
+
+export function initGlobe(canvas: HTMLCanvasElement, words: string[] = DEFAULT_WORDS): GlobeController | null {
+  if (!words.length) words = DEFAULT_WORDS;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = window.innerWidth < 760;
 
@@ -181,10 +194,11 @@ export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.',
   geo.setAttribute('position', new Float32BufferAttribute(pos, 3));
   geo.setAttribute('aStart', new Float32BufferAttribute(start, 3));
   geo.setAttribute('aRand', new Float32BufferAttribute(rand, 1));
-  geo.setAttribute('aS1', new Float32BufferAttribute(sampleWord(words[0], total, wordWidth), 3));
-  geo.setAttribute('aS2', new Float32BufferAttribute(sampleWord(words[1], total, wordWidth), 3));
-  geo.setAttribute('aS3', new Float32BufferAttribute(sampleWord(words[2], total, wordWidth), 3));
-  geo.setAttribute('aS4', new Float32BufferAttribute(sampleWord(words[3], total, wordWidth), 3));
+  // Six word shapes; missing words fall back to the last one.
+  for (let w = 0; w < 6; w++) {
+    const word = words[Math.min(w, words.length - 1)];
+    geo.setAttribute(`aS${w + 1}`, new Float32BufferAttribute(sampleWord(word, total, wordWidth), 3));
+  }
 
   const mat = new ShaderMaterial({
     vertexShader: VERT,
@@ -248,8 +262,13 @@ export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.',
     const u = mat.uniforms;
     u.uTime.value = t;
     if (!reduce) u.uIntro.value = Math.min(t / 2.6, 1);
-    // Sphere first, then one word per quarter, explode at the end.
-    u.uMorph.value = map(prog, 0.1, 0.22) + map(prog, 0.3, 0.42) + map(prog, 0.5, 0.62) + map(prog, 0.7, 0.82);
+    // Sphere first, then one word per slot, explode at the end.
+    let morph = 0;
+    for (let w = 0; w < 6; w++) {
+      const start = 0.08 + w * 0.133;
+      morph += map(prog, start, start + 0.07);
+    }
+    u.uMorph.value = morph;
     u.uExplode.value = map(prog, 0.88, 1);
     u.uSpin.value = reduce ? 0 : t * 0.12;
     // The sphere sits on the right, words move to the centre.

@@ -162,7 +162,7 @@ const canvas = hero?.querySelector<HTMLCanvasElement>('[data-globe]');
 if (canvas) {
   document.fonts.ready.then(() =>
     import('./globe').then((m) => {
-      globe = m.initGlobe(canvas);
+      globe = m.initGlobe(canvas, JSON.parse(canvas.dataset.words || '[]'));
       if (globe && hudCount) {
         const n = globe.count;
         const t0 = performance.now();
@@ -176,12 +176,8 @@ if (canvas) {
     }),
   );
 }
-const capRanges: [number, number][] = [
-  [0.2, 0.31],
-  [0.4, 0.51],
-  [0.6, 0.71],
-  [0.8, 0.9],
-];
+// Matches the morph timing in globe.ts: one slot per word.
+const capRanges: [number, number][] = caps.map((_, i) => [0.08 + i * 0.133 + 0.05, 0.08 + (i + 1) * 0.133]);
 function updateHero() {
   if (!hero) return;
   const r = hero.getBoundingClientRect();
@@ -200,22 +196,77 @@ function updateHero() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Services scroll story                                               */
+/* Capability index: filter chips + floating video preview             */
 /* ------------------------------------------------------------------ */
-const story = document.querySelector<HTMLElement>('[data-story]');
-const steps = story ? [...story.querySelectorAll<HTMLElement>('[data-story-step]')] : [];
-const tabs = story ? [...story.querySelectorAll<HTMLElement>('[data-story-tab]')] : [];
-function updateStory() {
-  if (!story) return;
-  const mid = window.innerHeight * 0.5;
-  let active = 0;
-  steps.forEach((step, i) => {
-    const r = step.getBoundingClientRect();
-    tabs[i]?.style.setProperty('--p', String(clamp((mid - r.top) / r.height)));
-    if (r.top < mid) active = i;
-  });
-  steps.forEach((s, i) => s.classList.toggle('active', i === active));
-  tabs.forEach((t, i) => t.classList.toggle('active', i === active));
+const capsEl = document.querySelector<HTMLElement>('[data-caps]');
+if (capsEl) {
+  const chips = [...capsEl.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const items = [...capsEl.querySelectorAll<HTMLElement>('[data-group]')];
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const f = chip.dataset.filter!;
+      chips.forEach((c) => {
+        c.classList.toggle('on', c === chip);
+        c.setAttribute('aria-pressed', String(c === chip));
+      });
+      // Fade out what doesn't match, then collapse it so matches move up.
+      let k = 0;
+      items.forEach((it) => {
+        const show = f === 'all' || it.dataset.group === f;
+        if (show) {
+          it.hidden = false;
+          it.style.transitionDelay = `${k++ * 30}ms`;
+          requestAnimationFrame(() => requestAnimationFrame(() => it.classList.remove('out')));
+        } else {
+          it.style.transitionDelay = '0ms';
+          it.classList.add('out');
+          setTimeout(() => {
+            if (it.classList.contains('out')) it.hidden = true;
+          }, 260);
+        }
+      });
+    }),
+  );
+
+  const preview = capsEl.querySelector<HTMLElement>('[data-preview]');
+  const panes = preview ? [...preview.querySelectorAll<HTMLElement>('[data-preview-for]')] : [];
+  if (preview && canHover && !reduceMotion) {
+    let x = 0,
+      y = 0,
+      px = 0,
+      py = 0,
+      raf = 0;
+    const tick = () => {
+      const dx = x - px;
+      px += dx * 0.14;
+      py += (y - py) * 0.14;
+      preview.style.setProperty('--px', `${px}px`);
+      preview.style.setProperty('--py', `${py}px`);
+      preview.style.setProperty('--pr', `${clamp(dx * 0.05, -8, 8)}deg`);
+      raf = Math.abs(dx) + Math.abs(y - py) > 0.5 ? requestAnimationFrame(tick) : 0;
+    };
+    items.forEach((it) => {
+      it.addEventListener('pointerenter', () => {
+        if (it.classList.contains('out')) return;
+        panes.forEach((p) => {
+          const on = p.dataset.previewFor === it.dataset.group;
+          p.classList.toggle('on', on);
+          const v = p.querySelector('video');
+          if (on && v) {
+            load(v);
+            v.play().catch(() => {});
+          }
+        });
+        preview.classList.add('on');
+      });
+      it.addEventListener('pointerleave', () => preview.classList.remove('on'));
+    });
+    capsEl.addEventListener('pointermove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -283,7 +334,6 @@ const frame = (time: number) => {
   lenis?.raf(time);
   updateChrome();
   updateHero();
-  updateStory();
   updateReel();
   updateMarquee();
   velocity *= lenis ? 1 : 0.9;

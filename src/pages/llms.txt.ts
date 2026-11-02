@@ -9,10 +9,10 @@ export const GET: APIRoute = () => {
 
 > ${en.meta.description}
 
-${site.name} is a one-person, AI-native creative tech studio based in Taiwan, working with clients worldwide. Founder: ${site.founder}. Method: ${site.tagline}
+${site.name} is a one-person, AI-native creative tech studio based in Taiwan, working with clients worldwide. Founder: ${site.founder}. ${site.tagline}
 
 ## Services
-${en.pillars.items.map((p) => `- ${p.label.replace(/^\d+ — /, '')}: ${p.body} (${p.list.join(', ')})`).join('\n')}
+${en.capabilities.groups.map((g) => `### ${g.name}\n${g.items.map((i) => `- ${i.name}: ${i.desc}`).join('\n')}`).join('\n\n')}
 
 ## Pricing (starting prices, GBP)
 ${en.pricing.rows.map((r) => `- ${r.service}: ${en.pricing.tiers.map((t, i) => (r.prices[i] ? `${t.name} ${r.prices[i]}` : '')).filter(Boolean).join(', ')} — ${r.note}`).join('\n')}

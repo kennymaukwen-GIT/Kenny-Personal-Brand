@@ -8,7 +8,7 @@ export const site = {
   founder: 'Kenny',
   // TODO: replace with the real domain once it is bought.
   url: 'https://kairo.studio',
-  tagline: 'Seen. Found. Used. Scaled.',
+  tagline: 'An AI studio that builds anything.',
   // TODO: real booking link (Cal.com now, Smart Schedule later).
   bookingUrl: 'https://cal.com/',
   // TODO: real contact email.

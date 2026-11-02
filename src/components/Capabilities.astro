@@ -1,0 +1,234 @@
+---
+// Full capability index. Filter by discipline; hovering a row floats a video
+// preview next to the cursor.
+import type { Lang } from '../config/site';
+import { clips, type Clip } from '../config/media';
+import { t } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+import SplitText from './SplitText.astro';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).capabilities;
+const clipFor: Record<string, Clip> = {
+  design: clips.chrome,
+  film: clips.skywhale,
+  web: clips.network,
+  software: clips.orrery,
+  ai: clips.monolith,
+};
+const total = d.groups.reduce((n, g) => n + g.items.length, 0);
+let n = 0;
+---
+
+<section class="section" id="capabilities" data-caps>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="kicker scramble">{d.kicker}</p>
+        <SplitText class="h-lg" text={d.title} />
+      </div>
+      <p class="lead reveal">{d.sub}</p>
+    </div>
+
+    <div class="filters reveal" role="group" aria-label={d.kicker}>
+      <button type="button" class="chip on" data-filter="all" aria-pressed="true">
+        {d.all} <sup>{total}</sup>
+      </button>
+      {
+        d.groups.map((g) => (
+          <button type="button" class="chip" data-filter={g.key} aria-pressed="false">
+            {g.name} <sup>{g.items.length}</sup>
+          </button>
+        ))
+      }
+    </div>
+
+    <ul class="list">
+      {
+        d.groups.map((g) =>
+          g.items.map((it) => {
+            n++;
+            return (
+              <li class="item" data-group={g.key}>
+                <span class="idx">{String(n).padStart(2, '0')}</span>
+                <span class="name">{it.name}</span>
+                <span class="desc">{it.desc}</span>
+                <span class="grp">{g.name}</span>
+              </li>
+            );
+          }),
+        )
+      }
+    </ul>
+  </div>
+
+  <div class="preview" data-preview aria-hidden="true">
+    {
+      d.groups.map((g) => (
+        <div class="pv" data-preview-for={g.key}>
+          <LazyVideo src={clipFor[g.key].src} />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .wrap {
+    display: grid;
+    gap: 32px;
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px 48px;
+  }
+  .head > div {
+    display: grid;
+    gap: 20px;
+    flex: 1 1 560px;
+  }
+  .head .lead {
+    flex: 0 1 38ch;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    font-size: 14px;
+    cursor: pointer;
+    transition:
+      background 0.3s,
+      color 0.3s,
+      border-color 0.3s;
+  }
+  .chip sup {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: 2px;
+  }
+  .chip:hover {
+    border-color: var(--fg);
+  }
+  .chip.on {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+  .chip.on sup {
+    color: var(--accent);
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+    border-top: 1px solid var(--line);
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    grid-template-areas:
+      'idx name grp'
+      'idx desc desc';
+    column-gap: 16px;
+    row-gap: 4px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.5s var(--ease),
+      color 0.3s;
+  }
+  .item.out {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .item[hidden] {
+    display: none;
+  }
+  .idx {
+    grid-area: idx;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    padding-top: 6px;
+  }
+  .name {
+    grid-area: name;
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    transition: transform 0.5s var(--ease), color 0.3s;
+  }
+  .desc {
+    grid-area: desc;
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+  .grp {
+    grid-area: grp;
+    align-self: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  @media (hover: hover) {
+    .item:not(.out):hover .name {
+      transform: translateX(8px);
+      color: #c4bcff;
+    }
+  }
+  /* Floating video preview that follows the cursor */
+  .preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 40;
+    width: 320px;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(var(--px, -999px), var(--py, -999px), 0) translate(-50%, -110%) scale(0.8) rotate(var(--pr, 0deg));
+    transition: opacity 0.35s, scale 0.35s;
+    box-shadow: 0 30px 80px -20px rgba(124, 108, 255, 0.45);
+    background: var(--surface);
+  }
+  .preview.on {
+    opacity: 1;
+    transform: translate3d(var(--px, -999px), var(--py, -999px), 0) translate(-50%, -110%) scale(1) rotate(var(--pr, 0deg));
+  }
+  .pv {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .pv.on {
+    opacity: 1;
+  }
+  @media (max-width: 860px) {
+    .list {
+      grid-template-columns: 1fr;
+    }
+    .preview {
+      display: none;
+    }
+  }
+</style>

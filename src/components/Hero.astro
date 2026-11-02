@@ -1,6 +1,7 @@
 ---
-// Pinned scroll film: the particle cloud forms a globe, then spells SEEN. FOUND.
-// USED. while captions explain each pillar, then explodes into the next section.
+// Pinned scroll film: the particle cloud forms a globe, then spells out what the
+// studio builds — WEBSITES, APPS, FILMS, SOFTWARE, AGENTS, ANYTHING. — with a caption
+// for each, then explodes into the next section.
 import { site, type Lang } from '../config/site';
 import { t } from '../i18n';
 import SplitText from './SplitText.astro';
@@ -11,12 +12,12 @@ interface Props {
 const { lang } = Astro.props;
 const d = t(lang);
 const h = d.hero;
-const caps = d.pillars.items;
+const caps = h.reel;
 ---
 
 <section class="hero" data-hero aria-labelledby="hero-title">
   <div class="stage">
-    <canvas class="globe" data-globe aria-hidden="true"></canvas>
+    <canvas class="globe" data-globe data-words={JSON.stringify(caps.map((c) => c.word))} aria-hidden="true"></canvas>
     <div class="glow" aria-hidden="true"></div>
 
     <div class="wrap intro" data-hero-intro>
@@ -36,8 +37,7 @@ const caps = d.pillars.items;
         caps.map((c, i) => (
           <div class="cap" data-cap={i}>
             <span class="num">0{i + 1} / 0{caps.length}</span>
-            <strong>{c.title}</strong>
-            <span class="muted">{c.list.slice(0, 3).join(' · ')}</span>
+            <strong>{c.line}</strong>
           </div>
         ))
       }
@@ -54,7 +54,7 @@ const caps = d.pillars.items;
 <style>
   .hero {
     position: relative;
-    height: 520vh;
+    height: 680vh;
   }
   .stage {
     position: sticky;
