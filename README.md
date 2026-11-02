@@ -1,7 +1,7 @@
 # Kairo Studio — website
 
 AI-native creative tech studio site. **Seen. Found. Used.**
-Abstract, painterly design: live WebGL pigment paintings (`src/scripts/paint.ts`) with a palette switcher. Built with [Astro](https://astro.build) as a static site, English by default with a full Traditional Chinese version at `/zh-tw/`.
+Minimal, Scale-style design (black, one sans-serif typeface, one accent). Built with [Astro](https://astro.build) as a static site, English by default with a full Traditional Chinese version at `/zh-tw/`.
 
 ## Run it
 
@@ -22,7 +22,6 @@ Deploy `dist/` to any static host (Cloudflare Pages, Vercel, Netlify). Build com
 | All English copy and prices | `src/i18n/en.ts` |
 | All Chinese copy and prices | `src/i18n/zh.ts` |
 | Colours, fonts, spacing | `src/styles/global.css` (`:root` tokens) |
-| Paint palettes and the shader | `src/scripts/paint.ts` |
 
 ## Before launch (TODO)
 

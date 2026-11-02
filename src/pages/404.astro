@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import PaintCanvas from '../components/PaintCanvas.astro';
 import { t } from '../i18n';
 
 const d = t('en').notFound;
@@ -8,8 +7,8 @@ const d = t('en').notFound;
 
 <Base lang="en" path="/404" title={d.title}>
   <section class="nf">
-    <PaintCanvas interactive seed={40.4} scale={1.2} />
-    <div class="wrap label-card inner">
+    
+    <div class="wrap">
       <p class="kicker">404</p>
       <h1 class="h-xl">{d.title}</h1>
       <p class="lead">{d.body}</p>
@@ -27,14 +26,7 @@ const d = t('en').notFound;
     align-items: center;
     overflow: hidden;
   }
-  .nf :global(.paint-wrap) {
-    z-index: -1;
-  }
-  .inner {
-    width: auto;
-    max-width: 640px;
-    margin-left: var(--gutter);
-    padding: 32px;
+  .wrap {
     display: grid;
     gap: 24px;
     justify-items: start;

@@ -34,66 +34,36 @@ const d = t(Astro.props.lang).process;
   .steps {
     list-style: none;
     padding: 0;
-    margin: 40px 0 0;
+    margin: 32px 0 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    border-top: 1.5px solid var(--ink);
+    gap: 32px;
   }
   .step {
-    padding: 28px 24px 8px 0;
     display: grid;
-    gap: 12px;
+    gap: 10px;
     align-content: start;
-    border-right: 1px solid var(--line);
-  }
-  .step:not(:first-child) {
-    padding-left: 24px;
-  }
-  .step:last-child {
-    border-right: 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line-strong);
   }
   .n {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 64px;
-    line-height: 0.8;
-    color: var(--p1);
-    transition: color 1s;
-  }
-  .step:nth-child(2) .n {
-    color: var(--p2);
-  }
-  .step:nth-child(3) .n {
-    color: var(--p3);
-  }
-  .step:nth-child(4) .n {
-    color: var(--p4);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
   }
   .step p {
     margin: 0;
-    color: var(--ink-2);
+    color: var(--fg-2);
     font-size: 15px;
   }
-  @media (max-width: 960px) {
+  @media (max-width: 900px) {
     .steps {
       grid-template-columns: 1fr 1fr;
-    }
-    .step:nth-child(3) {
-      padding-left: 0;
-    }
-    .step:nth-child(2) {
-      border-right: 0;
     }
   }
   @media (max-width: 520px) {
     .steps {
       grid-template-columns: 1fr;
-    }
-    .step,
-    .step:not(:first-child) {
-      padding: 22px 0;
-      border-right: 0;
-      border-bottom: 1px solid var(--line);
     }
   }
 </style>

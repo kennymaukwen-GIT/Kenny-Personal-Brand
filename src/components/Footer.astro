@@ -14,7 +14,6 @@ const social = Object.entries(site.social).filter(([, url]) => url);
 
 <footer class="footer">
   <div class="wrap">
-    <div class="giant" aria-hidden="true"><span>Seen.</span> <span class="it">Found.</span> <span>Used.</span></div>
     <div class="row">
       <div class="col">
         <strong>{site.name}</strong>
@@ -36,49 +35,26 @@ const social = Object.entries(site.social).filter(([, url]) => url);
 
 <style>
   .footer {
-    position: relative;
-    z-index: 2;
-    border-top: 1.5px solid var(--ink);
-    padding: 64px 0 36px;
-    overflow: hidden;
-    background: var(--paper-3);
-  }
-  .giant {
-    font-family: var(--font-display);
-    font-size: clamp(56px, 13.5vw, 220px);
-    line-height: 0.9;
-    letter-spacing: -0.03em;
-    white-space: nowrap;
-    margin-bottom: 56px;
-  }
-  .giant span:nth-child(1) {
-    color: var(--p1);
-  }
-  .giant span:nth-child(2) {
-    color: var(--p2);
-  }
-  .giant span:nth-child(3) {
-    color: var(--p3);
-  }
-  .giant span {
-    transition: color 1s;
+    border-top: 1px solid var(--line);
+    padding: 56px 0 32px;
+    font-size: 14px;
   }
   .row {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 28px;
+    margin-bottom: 40px;
   }
   .col {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
+    color: var(--fg-2);
   }
   .col strong {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 26px;
+    color: var(--fg);
+    font-weight: 500;
   }
   .links {
     flex-direction: row;
@@ -86,19 +62,13 @@ const social = Object.entries(site.social).filter(([, url]) => url);
     gap: 24px;
     text-transform: capitalize;
   }
-  .links a,
-  .col a {
-    text-decoration: underline;
-    text-decoration-color: var(--line-strong);
-    text-underline-offset: 4px;
-  }
   .links a:hover,
   .col a:hover {
-    text-decoration-color: var(--p2);
+    color: var(--fg);
   }
   .small {
-    font-size: 14px;
     margin: 0;
+    font-size: 13px;
   }
   .built {
     display: inline-flex;
@@ -106,9 +76,9 @@ const social = Object.entries(site.social).filter(([, url]) => url);
     gap: 8px;
   }
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: var(--p2);
+    background: var(--accent);
   }
 </style>

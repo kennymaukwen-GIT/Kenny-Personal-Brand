@@ -1,7 +1,8 @@
 ---
 import type { Lang } from '../config/site';
+import { clips } from '../config/media';
 import { t } from '../i18n';
-import PaintCanvas from './PaintCanvas.astro';
+import LazyVideo from './LazyVideo.astro';
 
 interface Props {
   lang: Lang;
@@ -9,124 +10,52 @@ interface Props {
 const d = t(Astro.props.lang).building;
 ---
 
-<section class="section building" id="building">
-  <div class="wrap">
-    <div class="card reveal">
-      <div class="media">
-        <PaintCanvas seed={22.3} shift={3} scale={0.9} quality={0.7} />
-        <div class="app" aria-hidden="true">
-          <span class="slot s1"></span>
-          <span class="slot s2"></span>
-          <span class="slot s3"></span>
-        </div>
-      </div>
-      <div class="body">
-        <p class="kicker">{d.kicker}</p>
-        <h2 class="h-lg">{d.title}</h2>
-        <span class="pill"><span class="pulse"></span>{d.status}</span>
-        <p class="lead">{d.body}</p>
-        <a class="btn btn-ghost" href="#buildlog">{d.cta} <span class="arrow">→</span></a>
-      </div>
+<section class="section" id="building">
+  <div class="wrap grid">
+    <div class="body reveal">
+      <p class="kicker">{d.kicker}</p>
+      <h2 class="h-lg">{d.title}</h2>
+      <p class="status muted"><span class="dot"></span>{d.status}</p>
+      <p class="lead">{d.body}</p>
+      <a class="btn btn-ghost" href="#buildlog">{d.cta} <span class="arrow">→</span></a>
+    </div>
+    <div class="panel media reveal" style="--d:.1s" aria-hidden="true">
+      <LazyVideo src={clips.orrery.src} />
     </div>
   </div>
 </section>
 
 <style>
-  .card {
+  .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border: 1.5px solid var(--ink);
-    background: var(--paper-3);
-  }
-  .media {
-    position: relative;
-    min-height: 460px;
-    border-right: 1.5px solid var(--ink);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-  }
-  /* A tiny abstract "calendar" floating over the paint */
-  .app {
-    position: relative;
-    width: min(62%, 260px);
-    aspect-ratio: 9 / 16;
-    border-radius: 28px;
-    background: rgba(246, 241, 232, 0.86);
-    backdrop-filter: blur(10px);
-    border: 1.5px solid var(--ink);
-    box-shadow: 0 30px 60px -30px rgba(20, 17, 22, 0.6);
-    padding: 22% 12% 0;
-    display: grid;
-    align-content: start;
-    gap: 10px;
-    transform: rotate(-4deg);
-  }
-  .slot {
-    height: 34px;
-    border-radius: 10px;
-    transition: background 1s;
-  }
-  .s1 {
-    background: var(--p1);
-    width: 80%;
-  }
-  .s2 {
-    background: var(--p2);
-    width: 55%;
-    margin-left: 30%;
-    height: 56px;
-  }
-  .s3 {
-    background: var(--p3);
-    width: 70%;
-    margin-left: 10%;
+    gap: 56px;
+    align-items: center;
   }
   .body {
-    padding: clamp(32px, 5vw, 64px);
     display: grid;
-    gap: 22px;
-    align-content: center;
+    gap: 20px;
     justify-items: start;
   }
-  .pill {
+  .status {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--ink);
+    margin: 0;
+    font-size: 14px;
   }
-  .pulse {
-    width: 8px;
-    height: 8px;
+  .dot {
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: var(--p2);
-    animation: pulse 1.8s ease-out infinite;
+    background: var(--accent);
   }
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(226, 65, 43, 0.5);
-    }
-    100% {
-      box-shadow: 0 0 0 12px rgba(226, 65, 43, 0);
-    }
+  .media {
+    aspect-ratio: 4 / 3;
   }
   @media (max-width: 860px) {
-    .card {
+    .grid {
       grid-template-columns: 1fr;
-    }
-    .media {
-      min-height: 380px;
-      border-right: 0;
-      border-bottom: 1.5px solid var(--ink);
-    }
-    .app {
-      width: 150px;
     }
   }
 </style>

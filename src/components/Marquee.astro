@@ -1,4 +1,5 @@
 ---
+// Static capability strip (a quiet stand-in for a logo bar).
 import type { Lang } from '../config/site';
 import { t } from '../i18n';
 
@@ -6,56 +7,28 @@ interface Props {
   lang: Lang;
 }
 const items = t(Astro.props.lang).marquee;
-const loop = [...items, ...items];
 ---
 
-<div class="marquee" aria-label={items.join(', ')}>
-  <div class="marquee-track" aria-hidden="true">
-    {
-      loop.map((item, i) => (
-        <span class="item">
-          <span class={i % 2 ? 'it' : ''}>{item}</span>
-          <span class="dot" style={`background:var(--p${(i % 3) + 1})`} />
-        </span>
-      ))
-    }
-  </div>
+<div class="strip">
+  <ul class="wrap">
+    {items.map((item) => <li>{item}</li>)}
+  </ul>
 </div>
 
 <style>
-  .marquee {
-    position: relative;
-    z-index: 2;
-    border-top: 1px solid var(--ink);
-    border-bottom: 1px solid var(--ink);
-    padding: 18px 0;
-    overflow: hidden;
-    background: var(--paper-3);
+  .strip {
+    border-top: 1px solid var(--line);
+    padding: 28px 0;
   }
-  .marquee-track {
+  ul {
+    list-style: none;
+    margin: 0 auto;
     display: flex;
-    width: max-content;
-    animation: scroll 46s linear infinite;
-  }
-  .item {
-    display: inline-flex;
-    align-items: center;
-    gap: 32px;
-    padding-right: 32px;
-    font-family: var(--font-display);
-    font-size: clamp(30px, 4vw, 52px);
-    line-height: 1.1;
-    white-space: nowrap;
-  }
-  .dot {
-    width: 0.42em;
-    height: 0.42em;
-    border-radius: 55% 45% 50% 48%;
-    transition: background 1s;
-  }
-  @keyframes scroll {
-    to {
-      transform: translateX(-50%);
-    }
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 32px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
   }
 </style>

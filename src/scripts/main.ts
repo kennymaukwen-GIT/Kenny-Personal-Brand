@@ -1,5 +1,3 @@
-import { initPaint } from './paint';
-
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -21,7 +19,7 @@ const revealIO = new IntersectionObserver(
   },
   { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
 );
-document.querySelectorAll('.reveal, .split-line').forEach((el) => revealIO.observe(el));
+document.querySelectorAll('.reveal').forEach((el) => revealIO.observe(el));
 
 // Lazy videos: attach the source when near the viewport,
 // autoplay while visible (or on hover for "hover" tiles on desktop).
@@ -88,19 +86,12 @@ videos.forEach((v) => {
   );
 });
 
-// Live generative paintings.
-initPaint();
-
-// Live Taipei clock in the hero.
-const clock = document.querySelector<HTMLElement>('[data-clock]');
-if (clock) {
-  const fmt = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Asia/Taipei',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
-  const update = () => (clock.textContent = `Taipei ${fmt.format(new Date())}`);
-  update();
-  setInterval(update, 1000);
+// Pause the hero video when it scrolls away (saves battery on laptops).
+const heroVideo = document.querySelector<HTMLVideoElement>('.hero video');
+if (heroVideo) {
+  if (reduceMotion) heroVideo.pause();
+  new IntersectionObserver(([e]) => {
+    if (reduceMotion) return;
+    e.isIntersecting ? heroVideo.play().catch(() => {}) : heroVideo.pause();
+  }).observe(heroVideo);
 }

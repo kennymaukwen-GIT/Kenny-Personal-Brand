@@ -9,21 +9,17 @@ const { lang } = Astro.props;
 const d = t(lang).caseFeature;
 ---
 
-<section class="section case" id="case">
-  <div class="blob b1" aria-hidden="true"></div>
-  <div class="blob b2" aria-hidden="true"></div>
+<section class="section" id="case">
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
-    <h2 class="h-lg title reveal" style="--d:.1s">{d.title}</h2>
-    <p class="lead reveal" style="--d:.2s">{d.body}</p>
+    <h2 class="h-lg reveal" style="--d:.05s">{d.title}</h2>
+    <p class="lead reveal" style="--d:.1s">{d.body}</p>
 
     <div class="stats">
       {
         d.stats.map((s, i) => (
-          <div class="stat reveal" style={`--d:${0.1 + i * 0.1}s`}>
-            <span class="value" style={`color:var(--p${i + 1})`}>
-              {s.value}
-            </span>
+          <div class="stat reveal" style={`--d:${0.1 + i * 0.08}s`}>
+            <span class="value">{s.value}</span>
             <span class="label">{s.label}</span>
           </div>
         ))
@@ -31,99 +27,59 @@ const d = t(lang).caseFeature;
     </div>
 
     <div class="foot reveal">
-      <p class="quote h-md it">“{d.thesis}”</p>
-      <div class="foot-right">
-        <a class="btn btn-primary" href={localePath(lang, '/work/hsinchu-car-dealer')}>
-          {d.cta} <span class="arrow">→</span>
-        </a>
-        <p class="note muted">{d.note}</p>
-      </div>
+      <p class="h-md">“{d.thesis}”</p>
+      <a class="btn btn-ghost" href={localePath(lang, '/work/hsinchu-car-dealer')}>
+        {d.cta} <span class="arrow">→</span>
+      </a>
     </div>
+    <p class="note muted">{d.note}</p>
   </div>
 </section>
 
 <style>
-  .case {
-    overflow: hidden;
-    isolation: isolate;
-    background: var(--paper-2);
-    border-top: 1px solid var(--ink);
-    border-bottom: 1px solid var(--ink);
-  }
-  .blob {
-    position: absolute;
-    z-index: -1;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.35;
-    transition: background 1s;
-  }
-  .b1 {
-    width: 46vw;
-    height: 46vw;
-    right: -12vw;
-    top: -10vw;
-    background: var(--p1);
-  }
-  .b2 {
-    width: 30vw;
-    height: 30vw;
-    right: 18vw;
-    bottom: -14vw;
-    background: var(--p3);
-  }
   .wrap {
     display: grid;
-    gap: 28px;
+    gap: 24px;
   }
-  .title {
-    max-width: 15ch;
+  h2 {
+    max-width: 18ch;
   }
   .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--ink);
-    margin-top: 24px;
+    gap: 1px;
+    margin-top: 32px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
   }
   .stat {
-    padding: 28px 24px 28px 0;
+    padding: 32px 28px;
     display: grid;
     gap: 8px;
-    border-right: 1px solid var(--line);
-  }
-  .stat:not(:first-child) {
-    padding-left: 24px;
-  }
-  .stat:last-child {
-    border-right: 0;
+    background: var(--bg);
   }
   .value {
-    font-family: var(--font-display);
-    font-size: clamp(64px, 9vw, 140px);
-    line-height: 0.9;
-    letter-spacing: -0.03em;
-    transition: color 1s;
+    font-size: clamp(44px, 5.5vw, 72px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
   }
   .label {
-    color: var(--ink-2);
+    color: var(--fg-2);
     font-size: 15px;
-    max-width: 22ch;
   }
   .foot {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 32px;
-    margin-top: 24px;
+    align-items: center;
+    gap: 24px;
+    margin-top: 16px;
   }
-  .quote {
-    max-width: 18ch;
-  }
-  .foot-right {
-    display: grid;
-    gap: 12px;
-    justify-items: start;
+  .foot p {
+    margin: 0;
   }
   .note {
     font-size: 13px;
@@ -132,12 +88,6 @@ const d = t(lang).caseFeature;
   @media (max-width: 720px) {
     .stats {
       grid-template-columns: 1fr;
-    }
-    .stat,
-    .stat:not(:first-child) {
-      padding: 22px 0;
-      border-right: 0;
-      border-bottom: 1px solid var(--line);
     }
   }
 </style>

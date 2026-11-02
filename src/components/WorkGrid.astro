@@ -9,36 +9,24 @@ interface Props {
 }
 const { lang } = Astro.props;
 const d = t(lang).work;
-// Gallery-wall rhythm: some works hang larger, some slightly tilted.
-const big = new Set([0, 5, 8]);
-const tilt = [-0.5, 0.4, 0, 0.6, -0.4, 0, 0.3, -0.6, 0, 0.5, -0.3, 0.2];
 ---
 
-<section class="section work" id="work">
+<section class="section" id="work">
   <div class="wrap">
-    <div class="head">
-      <div>
-        <p class="kicker reveal">{d.kicker}</p>
-        <h2 class="h-lg reveal" style="--d:.1s">{d.title}</h2>
-      </div>
-      <p class="lead reveal" style="--d:.2s">{d.sub}</p>
-    </div>
+    <p class="kicker reveal">{d.kicker}</p>
+    <h2 class="h-lg reveal" style="--d:.05s">{d.title}</h2>
+    <p class="lead reveal" style="--d:.1s">{d.sub}</p>
 
-    <div class="wall">
+    <div class="grid">
       {
         reel.map((c, i) => (
-          <figure class={`work-item tile reveal ${big.has(i) ? 'big' : ''}`} style={`--d:${(i % 3) * 0.08}s; --tilt:${tilt[i]}deg`}>
-            <div class="mat">
-              <div class="media">
-                <LazyVideo src={c.src} mode="hover" label={`${c.title[lang]} — ${c.genre[lang]}`} />
-              </div>
+          <figure class="tile reveal" style={`--d:${(i % 3) * 0.06}s`}>
+            <div class="panel media">
+              <LazyVideo src={c.src} mode="hover" label={`${c.title[lang]} — ${c.genre[lang]}`} />
             </div>
             <figcaption>
-              <span class="no">No. {String(i + 1).padStart(2, '0')}</span>
-              <span class="name it">{c.title[lang]}</span>
-              <span class="meta muted">
-                {c.genre[lang]} · {d.medium} · 2026
-              </span>
+              <span>{c.title[lang]}</span>
+              <span class="muted">{c.genre[lang]}</span>
             </figcaption>
           </figure>
         ))
@@ -48,102 +36,49 @@ const tilt = [-0.5, 0.4, 0, 0.6, -0.4, 0, 0.3, -0.6, 0, 0.5, -0.3, 0.2];
 </section>
 
 <style>
-  .head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 24px 48px;
-    margin-bottom: 64px;
+  .wrap {
+    display: grid;
+    gap: 24px;
   }
-  .head > div {
-    flex: 1 1 520px;
+  h2 {
+    max-width: 18ch;
   }
-  .head .h-lg {
-    max-width: 13ch;
-    margin-top: 20px;
-  }
-  .head .lead {
-    flex: 0 1 34ch;
-    margin: 0;
-  }
-  .wall {
+  .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-flow: dense;
-    gap: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 40px);
+    gap: 32px 20px;
+    margin-top: 32px;
   }
-  .work-item {
+  .tile {
     margin: 0;
     cursor: pointer;
-    transform: rotate(var(--tilt));
-    transition: transform 0.6s var(--ease);
-  }
-  .work-item.reveal:not(.in) {
-    transform: translateY(26px) rotate(var(--tilt));
-  }
-  .work-item:hover {
-    transform: rotate(0deg) translateY(-6px);
-  }
-  .work-item.big {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-  .mat {
-    padding: clamp(10px, 1.4vw, 18px);
-    background: var(--paper-3);
-    border: 1px solid var(--line);
-    box-shadow: 0 24px 50px -32px rgba(20, 17, 22, 0.5);
   }
   .media {
-    position: relative;
     aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: var(--ink);
   }
-  .work-item :global(video) {
-    transition: transform 1.2s var(--ease), filter 0.6s;
-    filter: saturate(0.75) contrast(0.95);
+  .tile :global(video) {
+    transition: opacity 0.4s;
+    opacity: 0.85;
   }
-  .work-item:hover :global(video),
-  .work-item.playing :global(video) {
-    transform: scale(1.04);
-    filter: none;
+  .tile:hover :global(video),
+  .tile.playing :global(video) {
+    opacity: 1;
   }
   figcaption {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2px 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
     padding-top: 12px;
     font-size: 14px;
   }
-  .no {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--muted);
-    padding-top: 4px;
-  }
-  .name {
-    font-family: var(--font-display);
-    font-size: 22px;
-    line-height: 1.1;
-  }
-  .meta {
-    grid-column: 2;
-    font-size: 13px;
-  }
   @media (max-width: 860px) {
-    .wall {
+    .grid {
       grid-template-columns: 1fr 1fr;
     }
   }
   @media (max-width: 560px) {
-    .wall {
+    .grid {
       grid-template-columns: 1fr;
-    }
-    .work-item.big {
-      grid-column: auto;
-      grid-row: auto;
     }
   }
 </style>

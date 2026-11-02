@@ -1,7 +1,6 @@
 ---
 import { site, type Lang } from '../config/site';
 import { t } from '../i18n';
-import PaintCanvas from './PaintCanvas.astro';
 
 interface Props {
   lang: Lang;
@@ -12,85 +11,53 @@ const action = site.newsletterAction || `mailto:${site.email}?subject=Build%20Lo
 const method = site.newsletterAction ? 'post' : 'get';
 ---
 
-<section class="final">
-  <PaintCanvas interactive seed={31.4} shift={1} scale={1.6} quality={0.5} />
-  <div class="wrap inner">
-    <h2 class="h-xl title">
-      <span class="split-line"><span>{d.title[0]}</span></span>
-      <span class="split-line" style="--d:.12s"><span class="it">{d.title[1]}</span></span>
-    </h2>
+<section class="section final">
+  <div class="wrap">
+    <h2 class="h-xl reveal">{d.title.join(' ')}</h2>
+    <p class="lead reveal" style="--d:.05s">{d.sub}</p>
+    <a class="btn btn-primary reveal" style="--d:.1s" href={site.bookingUrl} target="_blank" rel="noopener">
+      {d.primary} <span class="arrow">→</span>
+    </a>
 
-    <div class="label-card card reveal" style="--d:.2s">
-      <p class="sub">{d.sub}</p>
-      <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
-        {d.primary} <span class="arrow">→</span>
-      </a>
-      <form class="news" id="buildlog" action={action} method={method}>
-        <div>
-          <strong class="it">{d.newsletterTitle}</strong>
-          <span class="muted">{d.newsletterBody}</span>
-        </div>
-        <div class="field">
-          <label class="sr-only" for="email">Email</label>
-          <input id="email" name="email" type="email" required placeholder={d.newsletterPlaceholder} autocomplete="email" />
-          <button class="btn btn-ghost" type="submit">{d.newsletterButton}</button>
-        </div>
-      </form>
-    </div>
+    <form class="news reveal" id="buildlog" action={action} method={method}>
+      <div>
+        <strong>{d.newsletterTitle}</strong>
+        <span class="muted">{d.newsletterBody}</span>
+      </div>
+      <div class="field">
+        <label class="sr-only" for="email">Email</label>
+        <input id="email" name="email" type="email" required placeholder={d.newsletterPlaceholder} autocomplete="email" />
+        <button class="btn btn-ghost" type="submit">{d.newsletterButton}</button>
+      </div>
+    </form>
   </div>
 </section>
 
 <style>
-  .final {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    min-height: 100svh;
-    display: flex;
-    align-items: stretch;
-    padding: clamp(100px, 12vw, 160px) 0 clamp(48px, 6vw, 80px);
-    border-top: 1px solid var(--ink);
-  }
-  .final :global(.paint-wrap) {
-    z-index: -1;
-  }
-  .inner {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 48px;
-  }
-  .title {
-    color: #fff;
-    mix-blend-mode: difference;
-    font-size: clamp(64px, 13vw, 220px);
-  }
-  .card {
-    max-width: 560px;
-    padding: 24px;
+  .wrap {
     display: grid;
-    gap: 18px;
-    justify-items: start;
+    gap: 24px;
+    justify-items: center;
+    text-align: center;
   }
-  .sub {
-    margin: 0;
-    color: var(--ink-2);
+  h2 {
+    max-width: 14ch;
   }
   .news {
+    margin-top: 72px;
     width: 100%;
-    display: grid;
-    gap: 12px;
-    padding-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-top: 32px;
     border-top: 1px solid var(--line);
+    text-align: left;
   }
   .news > div:first-child {
     display: grid;
     gap: 2px;
-  }
-  .news strong {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 26px;
   }
   .news .muted {
     font-size: 14px;
@@ -98,23 +65,21 @@ const method = site.newsletterAction ? 'post' : 'get';
   .field {
     display: flex;
     gap: 8px;
+    flex: 1;
+    max-width: 440px;
+    min-width: 260px;
   }
   input {
     flex: 1;
     min-width: 0;
-    height: 52px;
-    padding: 0 20px;
-    border-radius: 999px;
-    border: 1.5px solid var(--ink);
-    background: var(--paper);
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-2);
   }
   input:focus {
     outline: none;
-    border-color: var(--p1);
-  }
-  @media (max-width: 420px) {
-    .field {
-      flex-direction: column;
-    }
+    border-color: var(--accent);
   }
 </style>

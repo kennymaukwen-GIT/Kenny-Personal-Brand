@@ -1,47 +1,38 @@
 ---
 import type { Lang } from '../config/site';
+import { clips, type Clip } from '../config/media';
 import { t } from '../i18n';
-import PaintCanvas from './PaintCanvas.astro';
+import LazyVideo from './LazyVideo.astro';
 
 interface Props {
   lang: Lang;
 }
 const d = t(Astro.props.lang).pillars;
-// Each pillar is its own living painting: different seed, zoom and dominant pigment.
-const art = [
-  { seed: 4.2, shift: 0, scale: 1.6 },
-  { seed: 9.1, shift: 1, scale: 1.0 },
-  { seed: 14.6, shift: 2, scale: 2.3 },
-];
+const clipFor: Record<string, Clip> = {
+  seen: clips.chrome,
+  found: clips.network,
+  used: clips.orrery,
+};
 ---
 
-<section class="section pillars" id="what">
+<section class="section" id="what">
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
-    <div class="list">
+    <div class="grid">
       {
         d.items.map((p, i) => (
-          <article class={`pillar ${i % 2 ? 'flip' : ''}`}>
-            <figure class="frame reveal">
-              <div class="canvas">
-                <PaintCanvas seed={art[i].seed} shift={art[i].shift} scale={art[i].scale} quality={0.85} />
-              </div>
-              <figcaption>
-                <span>{p.label}</span>
-                <span class="muted">Pigment, WebGL — live</span>
-              </figcaption>
-            </figure>
-            <div class="text">
-              <h3 class="h-lg reveal">{p.title}</h3>
-              <p class="lead reveal" style="--d:.1s">
-                {p.body}
-              </p>
-              <ul class="reveal" style="--d:.2s">
-                {p.list.map((li) => (
-                  <li>{li}</li>
-                ))}
-              </ul>
+          <article class="card reveal" style={`--d:${i * 0.08}s`}>
+            <div class="panel media">
+              <LazyVideo src={clipFor[p.key].src} />
             </div>
+            <p class="label muted">{p.label}</p>
+            <h3 class="h-md">{p.title}</h3>
+            <p class="body">{p.body}</p>
+            <ul>
+              {p.list.map((li) => (
+                <li>{li}</li>
+              ))}
+            </ul>
           </article>
         ))
       }
@@ -50,85 +41,47 @@ const art = [
 </section>
 
 <style>
-  .list {
+  .grid {
     display: grid;
-    gap: clamp(80px, 12vw, 160px);
-    margin-top: 56px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 40px;
   }
-  .pillar {
+  .card {
     display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: clamp(32px, 6vw, 96px);
-    align-items: center;
-  }
-  .pillar.flip .frame {
-    order: 2;
-  }
-  .frame {
-    margin: 0;
-    padding: clamp(14px, 2vw, 24px);
-    background: var(--paper-3);
-    border: 1px solid var(--line);
-    box-shadow: 0 30px 60px -36px rgba(20, 17, 22, 0.45);
-    transform: rotate(-0.6deg);
-  }
-  .pillar.flip .frame {
-    transform: rotate(0.8deg);
-  }
-  .canvas {
-    position: relative;
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-  }
-  figcaption {
-    display: flex;
-    justify-content: space-between;
     gap: 12px;
-    padding-top: 12px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    align-content: start;
   }
-  .text {
-    display: grid;
-    gap: 24px;
+  .media {
+    aspect-ratio: 4 / 3;
+    margin-bottom: 12px;
+  }
+  .label {
+    margin: 0;
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+  .body {
+    margin: 0;
+    color: var(--fg-2);
+    font-size: 15px;
   }
   ul {
     list-style: none;
-    margin: 0;
+    margin: 8px 0 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-top: 1px solid var(--ink);
+    border-top: 1px solid var(--line);
   }
   li {
-    padding: 14px 0;
+    padding: 10px 0;
     border-bottom: 1px solid var(--line);
-    font-size: 15px;
-    color: var(--ink-2);
+    font-size: 14px;
+    color: var(--fg-2);
   }
-  li::before {
-    content: '● ';
-    color: var(--p2);
-    font-size: 10px;
-    vertical-align: 2px;
-    transition: color 1s;
-  }
-  @media (max-width: 860px) {
-    .pillar {
+  @media (max-width: 900px) {
+    .grid {
       grid-template-columns: 1fr;
-    }
-    .pillar.flip .frame {
-      order: 0;
-    }
-    .canvas {
-      aspect-ratio: 4 / 3;
-    }
-  }
-  @media (max-width: 420px) {
-    ul {
-      grid-template-columns: 1fr;
+      gap: 56px;
     }
   }
 </style>

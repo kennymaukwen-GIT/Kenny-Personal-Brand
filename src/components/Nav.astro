@@ -21,7 +21,7 @@ const links = [
   <div class="nav-inner">
     <a class="brand" href={home} aria-label={site.name}>
       <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-name">{site.shortName}<span class="it">&nbsp;Studio</span></span>
+      {site.name}
     </a>
     <nav class="links" aria-label="Primary">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
@@ -44,18 +44,19 @@ const links = [
     left: 0;
     right: 0;
     z-index: 50;
-    padding: 14px var(--gutter);
-    transition: background 0.4s, border-color 0.4s;
+    padding: 0 var(--gutter);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
   }
   .nav.scrolled {
-    background: rgba(238, 231, 218, 0.82);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
     border-color: var(--line);
   }
   .nav-inner {
     max-width: var(--max);
+    height: 64px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -66,72 +67,45 @@ const links = [
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: var(--font-display);
-    font-size: 26px;
-    line-height: 1;
-    padding: 6px 12px 6px 8px;
-    border-radius: 999px;
-    background: var(--paper-3);
-    border: 1px solid var(--line);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
   }
   .brand-mark {
-    width: 20px;
-    height: 20px;
-    border-radius: 52% 48% 45% 55%;
-    background: conic-gradient(from 20deg, var(--p1), var(--p2), var(--p3), var(--p1));
-    animation: spin 12s linear infinite;
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: var(--fg);
   }
   .links {
     display: flex;
-    gap: 4px;
-    padding: 4px;
-    font-size: 15px;
-    border-radius: 999px;
-    background: var(--paper-3);
-    border: 1px solid var(--line);
-  }
-  .links a {
-    padding: 6px 14px;
-    border-radius: 999px;
-    transition: background 0.3s;
+    gap: 28px;
+    font-size: 14px;
+    color: var(--fg-2);
   }
   .links a:hover {
-    background: var(--paper-2);
+    color: var(--fg);
   }
   .actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 16px;
   }
   .lang {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: var(--paper-3);
-    border: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+  .lang:hover {
+    color: var(--fg);
   }
   .nav-cta {
-    height: 40px;
-    padding: 0 18px;
+    height: 36px;
+    padding: 0 14px;
     font-size: 14px;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 860px) {
     .links {
       display: none;
-    }
-  }
-  @media (max-width: 420px) {
-    .brand-name .it {
-      display: none;
-    }
-    .nav-cta {
-      padding: 0 14px;
     }
   }
 </style>
