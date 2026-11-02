@@ -1,8 +1,11 @@
 ---
+// Scroll-driven story: the left column stays pinned while the three pillars
+// scroll past on the right; the active one lights up on the left.
 import type { Lang } from '../config/site';
 import { clips, type Clip } from '../config/media';
 import { t } from '../i18n';
 import LazyVideo from './LazyVideo.astro';
+import SplitText from './SplitText.astro';
 
 interface Props {
   lang: Lang;
@@ -15,19 +18,33 @@ const clipFor: Record<string, Clip> = {
 };
 ---
 
-<section class="section" id="what">
-  <div class="wrap">
-    <p class="kicker reveal">{d.kicker}</p>
-    <div class="grid">
+<section class="section" id="what" data-story>
+  <div class="wrap layout">
+    <aside class="side">
+      <p class="kicker">{d.kicker}</p>
+      <ol class="index">
+        {
+          d.items.map((p, i) => (
+            <li data-story-tab={i} class={i === 0 ? 'active' : ''}>
+              <span class="bar">
+                <span />
+              </span>
+              <span class="name">{p.label.replace(/^\d+ — /, '')}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </aside>
+    <div class="steps">
       {
         d.items.map((p, i) => (
-          <article class="card reveal" style={`--d:${i * 0.08}s`}>
-            <div class="panel media">
+          <article class="step" data-story-step={i}>
+            <div class="panel media spot">
               <LazyVideo src={clipFor[p.key].src} />
             </div>
             <p class="label muted">{p.label}</p>
-            <h3 class="h-md">{p.title}</h3>
-            <p class="body">{p.body}</p>
+            <SplitText tag="h3" class="h-lg" text={p.title} />
+            <p class="lead">{p.body}</p>
             <ul>
               {p.list.map((li) => (
                 <li>{li}</li>
@@ -41,47 +58,102 @@ const clipFor: Record<string, Clip> = {
 </section>
 
 <style>
-  .grid {
+  .layout {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-top: 40px;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
+    align-items: start;
   }
-  .card {
+  .side {
+    position: sticky;
+    top: 120px;
     display: grid;
-    gap: 12px;
-    align-content: start;
+    gap: 28px;
+  }
+  .index {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+  }
+  .index li {
+    display: grid;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.4s;
+  }
+  .index li.active {
+    color: var(--fg);
+  }
+  .bar {
+    position: relative;
+    height: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .bar span {
+    position: absolute;
+    inset: 0;
+    background: var(--fg);
+    transform-origin: left;
+    transform: scaleX(var(--p, 0));
+  }
+  .steps {
+    display: grid;
+    gap: 140px;
+  }
+  .step {
+    display: grid;
+    gap: 16px;
+    opacity: 0.35;
+    transition: opacity 0.6s var(--ease);
+  }
+  .step.active {
+    opacity: 1;
   }
   .media {
-    aspect-ratio: 4 / 3;
-    margin-bottom: 12px;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 16px;
   }
   .label {
     margin: 0;
     font-size: 13px;
     font-family: var(--font-mono);
   }
-  .body {
-    margin: 0;
-    color: var(--fg-2);
-    font-size: 15px;
-  }
   ul {
     list-style: none;
     margin: 8px 0 0;
     padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
     border-top: 1px solid var(--line);
   }
   li {
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--line);
     font-size: 14px;
     color: var(--fg-2);
   }
   @media (max-width: 900px) {
-    .grid {
+    .layout {
       grid-template-columns: 1fr;
-      gap: 56px;
+      gap: 32px;
+    }
+    .side {
+      position: static;
+    }
+    .index {
+      display: none;
+    }
+    .steps {
+      gap: 80px;
+    }
+    .step {
+      opacity: 1;
     }
   }
 </style>

@@ -3,6 +3,7 @@ import type { Lang } from '../config/site';
 import { reel } from '../config/media';
 import { t } from '../i18n';
 import LazyVideo from './LazyVideo.astro';
+import SplitText from './SplitText.astro';
 
 interface Props {
   lang: Lang;
@@ -14,14 +15,14 @@ const d = t(lang).work;
 <section class="section" id="work">
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
-    <h2 class="h-lg reveal" style="--d:.05s">{d.title}</h2>
+    <SplitText class="h-lg" text={d.title} />
     <p class="lead reveal" style="--d:.1s">{d.sub}</p>
 
     <div class="grid">
       {
         reel.map((c, i) => (
           <figure class="tile reveal" style={`--d:${(i % 3) * 0.06}s`}>
-            <div class="panel media">
+            <div class="panel media spot">
               <LazyVideo src={c.src} mode="hover" label={`${c.title[lang]} — ${c.genre[lang]}`} />
             </div>
             <figcaption>
@@ -57,12 +58,13 @@ const d = t(lang).work;
     aspect-ratio: 16 / 10;
   }
   .tile :global(video) {
-    transition: opacity 0.4s;
-    opacity: 0.85;
+    transition: opacity 0.4s, transform 0.8s var(--ease);
+    opacity: 0.8;
   }
   .tile:hover :global(video),
   .tile.playing :global(video) {
     opacity: 1;
+    transform: scale(1.03);
   }
   figcaption {
     display: flex;

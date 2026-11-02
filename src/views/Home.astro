@@ -11,7 +11,6 @@ import Process from '../components/Process.astro';
 import Building from '../components/Building.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 import { site, type Lang } from '../config/site';
-import { heroClip } from '../config/media';
 import { t } from '../i18n';
 
 interface Props {
@@ -42,7 +41,7 @@ const faq = {
 };
 ---
 
-<Base lang={lang} path="/" jsonLd={[faq]} preloadVideo={heroClip.src}>
+<Base lang={lang} path="/" jsonLd={[faq]}>
   <Hero lang={lang} />
   <Marquee lang={lang} />
   <Thesis lang={lang} />

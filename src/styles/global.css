@@ -199,3 +199,65 @@ html[lang^='zh'] .h-md {
   height: 100%;
   object-fit: cover;
 }
+
+/* ---------- Word-by-word reveal ---------- */
+.split .w {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(0.35em);
+  transition:
+    opacity 0.9s var(--ease),
+    filter 0.9s var(--ease),
+    transform 0.9s var(--ease);
+  transition-delay: calc(var(--d, 0s) + var(--i) * 45ms);
+}
+.split.in .w {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+/* ---------- Cursor spotlight on cards ---------- */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(124, 108, 255, 0.14), transparent 45%);
+  box-shadow: inset 0 0 0 1px rgba(124, 108, 255, 0.35);
+  -webkit-mask: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), #000, transparent 70%);
+  mask: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), #000, transparent 70%);
+}
+.spot:hover::after {
+  opacity: 1;
+}
+
+/* ---------- Smooth scroll (Lenis) ---------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split .w {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

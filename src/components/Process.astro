@@ -1,6 +1,7 @@
 ---
 import type { Lang } from '../config/site';
 import { t } from '../i18n';
+import SplitText from './SplitText.astro';
 
 interface Props {
   lang: Lang;
@@ -11,11 +12,11 @@ const d = t(Astro.props.lang).process;
 <section class="section process">
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
-    <h2 class="h-lg reveal" style="--d:.1s">{d.title}</h2>
+    <SplitText class="h-lg" text={d.title} />
     <ol class="steps">
       {
         d.steps.map((s, i) => (
-          <li class="step reveal" style={`--d:${i * 0.1}s`}>
+          <li class="step spot reveal" style={`--d:${i * 0.1}s`}>
             <span class="n">{s.n}</span>
             <h3 class="h-md">{s.title}</h3>
             <p>{s.body}</p>
@@ -43,8 +44,10 @@ const d = t(Astro.props.lang).process;
     display: grid;
     gap: 10px;
     align-content: start;
-    padding-top: 20px;
-    border-top: 1px solid var(--line-strong);
+    padding: 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--bg-2);
   }
   .n {
     font-family: var(--font-mono);

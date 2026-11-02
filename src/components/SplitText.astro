@@ -1,0 +1,19 @@
+---
+// Renders text as word spans (or characters for Chinese) that blur in one by one.
+interface Props {
+  text: string;
+  tag?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
+  class?: string;
+  id?: string;
+  delay?: number;
+}
+const { text, tag: Tag = 'h2', class: cls = '', id, delay = 0 } = Astro.props;
+const cjk = /[㐀-鿿]/.test(text);
+// Keep Latin words inside Chinese together; split CJK per character.
+const parts = cjk ? (text.match(/[A-Za-z0-9.%–\-+/]+|\s+|./gu) ?? [text]) : text.split(/(\s+)/);
+let n = 0;
+---
+
+<Tag class:list={['split', cls]} id={id} style={`--d:${delay}s`}>
+  {parts.map((p) => (/^\s+$/.test(p) ? ' ' : <span class="w" style={`--i:${n++}`}>{p}</span>))}
+</Tag>

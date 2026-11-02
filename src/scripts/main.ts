@@ -1,3 +1,5 @@
+import Lenis from 'lenis';
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -19,7 +21,7 @@ const revealIO = new IntersectionObserver(
   },
   { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
 );
-document.querySelectorAll('.reveal').forEach((el) => revealIO.observe(el));
+document.querySelectorAll('.reveal, .split').forEach((el) => revealIO.observe(el));
 
 // Lazy videos: attach the source when near the viewport,
 // autoplay while visible (or on hover for "hover" tiles on desktop).
@@ -86,12 +88,72 @@ videos.forEach((v) => {
   );
 });
 
-// Pause the hero video when it scrolls away (saves battery on laptops).
-const heroVideo = document.querySelector<HTMLVideoElement>('.hero video');
-if (heroVideo) {
-  if (reduceMotion) heroVideo.pause();
-  new IntersectionObserver(([e]) => {
-    if (reduceMotion) return;
-    e.isIntersecting ? heroVideo.play().catch(() => {}) : heroVideo.pause();
-  }).observe(heroVideo);
+// Smooth scrolling.
+if (!reduceMotion) {
+  const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -72 } });
+  const raf = (time: number) => {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  };
+  requestAnimationFrame(raf);
+}
+
+// Hero particle globe.
+const globe = document.querySelector<HTMLCanvasElement>('[data-globe]');
+if (globe) import('./globe').then((m) => m.initGlobe(globe));
+
+// Scroll story: highlight the pillar in view and fill its progress bar.
+const story = document.querySelector<HTMLElement>('[data-story]');
+if (story) {
+  const steps = [...story.querySelectorAll<HTMLElement>('[data-story-step]')];
+  const tabs = [...story.querySelectorAll<HTMLElement>('[data-story-tab]')];
+  const update = () => {
+    const mid = window.innerHeight * 0.5;
+    let active = 0;
+    steps.forEach((step, i) => {
+      const r = step.getBoundingClientRect();
+      const p = Math.min(Math.max((mid - r.top) / r.height, 0), 1);
+      tabs[i]?.style.setProperty('--p', String(p));
+      if (r.top < mid) active = i;
+    });
+    steps.forEach((s, i) => s.classList.toggle('active', i === active));
+    tabs.forEach((t, i) => t.classList.toggle('active', i === active));
+  };
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+}
+
+// Count numbers up when they come into view ("50–70%" counts both numbers).
+const countIO = new IntersectionObserver(
+  (entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      countIO.unobserve(e.target);
+      const el = e.target as HTMLElement;
+      const template = el.textContent ?? '';
+      if (reduceMotion) continue;
+      const t0 = performance.now();
+      const dur = 1400;
+      const tick = (now: number) => {
+        const k = Math.min((now - t0) / dur, 1);
+        const ease = 1 - Math.pow(1 - k, 3);
+        el.textContent = template.replace(/\d+/g, (n) => String(Math.round(Number(n) * ease)));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  },
+  { threshold: 0.6 },
+);
+document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
+
+// Cursor spotlight on cards.
+if (canHover) {
+  document.querySelectorAll<HTMLElement>('.spot').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      el.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
 }

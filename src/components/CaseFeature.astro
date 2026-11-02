@@ -1,6 +1,7 @@
 ---
 import type { Lang } from '../config/site';
 import { t, localePath } from '../i18n';
+import SplitText from './SplitText.astro';
 
 interface Props {
   lang: Lang;
@@ -12,14 +13,14 @@ const d = t(lang).caseFeature;
 <section class="section" id="case">
   <div class="wrap">
     <p class="kicker reveal">{d.kicker}</p>
-    <h2 class="h-lg reveal" style="--d:.05s">{d.title}</h2>
+    <SplitText class="h-lg" text={d.title} />
     <p class="lead reveal" style="--d:.1s">{d.body}</p>
 
     <div class="stats">
       {
         d.stats.map((s, i) => (
-          <div class="stat reveal" style={`--d:${0.1 + i * 0.08}s`}>
-            <span class="value">{s.value}</span>
+          <div class="stat spot reveal" style={`--d:${0.1 + i * 0.08}s`}>
+            <span class="value" data-count>{s.value}</span>
             <span class="label">{s.label}</span>
           </div>
         ))
@@ -55,6 +56,7 @@ const d = t(lang).caseFeature;
     overflow: hidden;
   }
   .stat {
+    border-radius: 0;
     padding: 32px 28px;
     display: grid;
     gap: 8px;

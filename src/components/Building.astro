@@ -3,6 +3,7 @@ import type { Lang } from '../config/site';
 import { clips } from '../config/media';
 import { t } from '../i18n';
 import LazyVideo from './LazyVideo.astro';
+import SplitText from './SplitText.astro';
 
 interface Props {
   lang: Lang;
@@ -14,12 +15,12 @@ const d = t(Astro.props.lang).building;
   <div class="wrap grid">
     <div class="body reveal">
       <p class="kicker">{d.kicker}</p>
-      <h2 class="h-lg">{d.title}</h2>
+      <SplitText class="h-lg" text={d.title} />
       <p class="status muted"><span class="dot"></span>{d.status}</p>
       <p class="lead">{d.body}</p>
       <a class="btn btn-ghost" href="#buildlog">{d.cta} <span class="arrow">→</span></a>
     </div>
-    <div class="panel media reveal" style="--d:.1s" aria-hidden="true">
+    <div class="panel media spot reveal" style="--d:.1s" aria-hidden="true">
       <LazyVideo src={clips.orrery.src} />
     </div>
   </div>
