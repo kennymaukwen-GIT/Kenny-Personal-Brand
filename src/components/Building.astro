@@ -14,13 +14,13 @@ const d = t(Astro.props.lang).building;
 <section class="section" id="building">
   <div class="wrap grid">
     <div class="body reveal">
-      <p class="kicker">{d.kicker}</p>
+      <p class="kicker scramble">{d.kicker}</p>
       <SplitText class="h-lg" text={d.title} />
       <p class="status muted"><span class="dot"></span>{d.status}</p>
       <p class="lead">{d.body}</p>
-      <a class="btn btn-ghost" href="#buildlog">{d.cta} <span class="arrow">→</span></a>
+      <a class="btn btn-ghost magnetic" href="#buildlog">{d.cta} <span class="arrow">→</span></a>
     </div>
-    <div class="panel media spot reveal" style="--d:.1s" aria-hidden="true">
+    <div class="panel media spot wipe" style="--d:.1s" aria-hidden="true">
       <LazyVideo src={clips.orrery.src} />
     </div>
   </div>

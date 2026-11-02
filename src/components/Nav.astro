@@ -24,7 +24,7 @@ const links = [
       {site.name}
     </a>
     <nav class="links" aria-label="Primary">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {links.map((l) => <a class="scramble-hover" href={l.href}>{l.label}</a>)}
     </nav>
     <div class="actions">
       <a class="lang" href={localePath(otherLang(lang), path)} hreflang={otherLang(lang) === 'en' ? 'en' : 'zh-Hant-TW'}>
@@ -53,6 +53,17 @@ const links = [
   }
   .nav.scrolled {
     border-color: var(--line);
+  }
+  .nav {
+    transition:
+      border-color 0.3s,
+      transform 0.5s var(--ease);
+  }
+  .nav.hidden {
+    transform: translateY(-100%);
+  }
+  .links a {
+    font-variant-numeric: tabular-nums;
   }
   .nav-inner {
     max-width: var(--max);

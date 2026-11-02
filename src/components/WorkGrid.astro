@@ -1,4 +1,6 @@
 ---
+// Horizontal gallery: vertical scrolling slides the reel sideways, and the
+// faster you scroll the more the reel skews.
 import type { Lang } from '../config/site';
 import { reel } from '../config/media';
 import { t } from '../i18n';
@@ -12,75 +14,155 @@ const { lang } = Astro.props;
 const d = t(lang).work;
 ---
 
-<section class="section" id="work">
-  <div class="wrap">
-    <p class="kicker reveal">{d.kicker}</p>
-    <SplitText class="h-lg" text={d.title} />
-    <p class="lead reveal" style="--d:.1s">{d.sub}</p>
-
-    <div class="grid">
+<section class="work" id="work" data-hscroll>
+  <div class="stage">
+    <div class="track" data-hscroll-track>
+      <div class="intro">
+        <p class="kicker scramble">{d.kicker}</p>
+        <SplitText class="h-lg" text={d.title} />
+        <p class="lead">{d.sub}</p>
+        <span class="hint mono">Scroll →</span>
+      </div>
       {
         reel.map((c, i) => (
-          <figure class="tile reveal" style={`--d:${(i % 3) * 0.06}s`}>
+          <figure class="tile" data-cursor-label="Play">
             <div class="panel media spot">
-              <LazyVideo src={c.src} mode="hover" label={`${c.title[lang]} — ${c.genre[lang]}`} />
+              <LazyVideo src={c.src} label={`${c.title[lang]} — ${c.genre[lang]}`} />
             </div>
             <figcaption>
-              <span>{c.title[lang]}</span>
+              <span class="idx">{String(i + 1).padStart(2, '0')}</span>
+              <span class="name">{c.title[lang]}</span>
               <span class="muted">{c.genre[lang]}</span>
             </figcaption>
           </figure>
         ))
       }
     </div>
+    <div class="wrap progress"><span data-hscroll-fill></span></div>
   </div>
 </section>
 
 <style>
-  .wrap {
-    display: grid;
-    gap: 24px;
+  .work {
+    position: relative;
+    border-top: 1px solid var(--line);
   }
-  h2 {
-    max-width: 18ch;
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
-  .grid {
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 var(--gutter);
+    width: max-content;
+    will-change: transform;
+  }
+  .intro {
+    width: min(520px, 80vw);
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px 20px;
-    margin-top: 32px;
+    gap: 20px;
+    padding-right: 48px;
+  }
+  .hint {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
   }
   .tile {
     margin: 0;
-    cursor: pointer;
+    width: clamp(300px, 38vw, 620px);
+    flex-shrink: 0;
+  }
+  .tile:nth-child(odd) {
+    transform: translateY(40px);
   }
   .media {
     aspect-ratio: 16 / 10;
   }
   .tile :global(video) {
-    transition: opacity 0.4s, transform 0.8s var(--ease);
-    opacity: 0.8;
+    transform: scale(1.15);
+    transition: transform 1.2s var(--ease);
   }
-  .tile:hover :global(video),
-  .tile.playing :global(video) {
-    opacity: 1;
-    transform: scale(1.03);
+  .tile:hover :global(video) {
+    transform: scale(1.02);
   }
   figcaption {
     display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding-top: 12px;
-    font-size: 14px;
+    align-items: baseline;
+    gap: 14px;
+    padding-top: 14px;
+    font-size: 15px;
   }
-  @media (max-width: 860px) {
-    .grid {
-      grid-template-columns: 1fr 1fr;
+  .idx {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .name {
+    font-weight: 500;
+  }
+  figcaption .muted {
+    margin-left: auto;
+    font-size: 13px;
+  }
+  .progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    height: 1px;
+  }
+  .progress::before {
+    content: '';
+    position: absolute;
+    inset: 0 var(--gutter);
+    background: var(--line);
+  }
+  .progress span {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: 0;
+    height: 1px;
+    background: var(--fg);
+    transform-origin: left;
+    transform: scaleX(var(--p, 0));
+  }
+  /* Phones and reduced motion: a plain vertical list. */
+  @media (max-width: 860px), (prefers-reduced-motion: reduce) {
+    .work {
+      height: auto !important;
+      padding: 80px 0;
     }
-  }
-  @media (max-width: 560px) {
-    .grid {
-      grid-template-columns: 1fr;
+    .stage {
+      position: static;
+      height: auto;
+    }
+    .track {
+      flex-direction: column;
+      align-items: stretch;
+      width: auto;
+      transform: none !important;
+    }
+    .intro {
+      width: auto;
+      padding: 0;
+    }
+    .tile {
+      width: 100%;
+    }
+    .tile:nth-child(odd) {
+      transform: none;
+    }
+    .progress {
+      display: none;
     }
   }
 </style>

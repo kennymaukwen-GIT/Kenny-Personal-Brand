@@ -11,7 +11,7 @@ const d = t(Astro.props.lang).pricing;
 
 <section class="section pricing" id="services">
   <div class="wrap">
-    <p class="kicker reveal">{d.kicker}</p>
+    <p class="kicker scramble">{d.kicker}</p>
     <SplitText class="h-lg" text={d.title} />
     <p class="lead reveal" style="--d:.2s">{d.sub}</p>
 
@@ -46,7 +46,7 @@ const d = t(Astro.props.lang).pricing;
 
     <div class="after reveal">
       <p class="muted">{d.footnote}</p>
-      <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
+      <a class="btn btn-primary magnetic" href={site.bookingUrl} target="_blank" rel="noopener">
         {d.cta} <span class="arrow">→</span>
       </a>
     </div>

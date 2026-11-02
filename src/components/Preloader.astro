@@ -1,0 +1,72 @@
+---
+import { site } from '../config/site';
+---
+
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="inner">
+    <span class="name" data-preloader-name>{site.name}</span>
+    <span class="count" data-preloader-count>000</span>
+  </div>
+  <div class="bar"><span data-preloader-bar></span></div>
+</div>
+<script is:inline>
+  // Show the intro once per session; skip it on reload or for reduced motion.
+  try {
+    if (sessionStorage.getItem('intro') || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('intro-done');
+    }
+  } catch (e) {}
+</script>
+
+<style>
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #000;
+    display: grid;
+    place-items: center;
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  :global(html.intro-done) .preloader {
+    display: none;
+  }
+  :global(html.intro-leaving) .preloader {
+    clip-path: inset(0 0 100% 0);
+  }
+  .inner {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+  }
+  .name {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .count {
+    font-size: clamp(96px, 20vw, 240px);
+    font-weight: 500;
+    letter-spacing: -0.06em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--line);
+  }
+  .bar span {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+</style>

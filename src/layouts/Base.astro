@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import Preloader from '../components/Preloader.astro';
+import Cursor from '../components/Cursor.astro';
 import { site, type Lang } from '../config/site';
 import { t, localePath } from '../i18n';
 
@@ -91,6 +93,9 @@ const allLd = [orgLd, ...jsonLd];
     {allLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
   </head>
   <body data-lang={lang}>
+    <Preloader />
+    <Cursor />
+    <div class="scroll-progress" aria-hidden="true"><span data-progress></span></div>
     <Nav lang={lang} path={path} />
     <main id="main">
       <slot />

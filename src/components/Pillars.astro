@@ -21,7 +21,7 @@ const clipFor: Record<string, Clip> = {
 <section class="section" id="what" data-story>
   <div class="wrap layout">
     <aside class="side">
-      <p class="kicker">{d.kicker}</p>
+      <p class="kicker scramble">{d.kicker}</p>
       <ol class="index">
         {
           d.items.map((p, i) => (
@@ -39,7 +39,7 @@ const clipFor: Record<string, Clip> = {
       {
         d.items.map((p, i) => (
           <article class="step" data-story-step={i}>
-            <div class="panel media spot">
+            <div class="panel media spot wipe">
               <LazyVideo src={clipFor[p.key].src} />
             </div>
             <p class="label muted">{p.label}</p>

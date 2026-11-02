@@ -1,0 +1,79 @@
+<div class="cursor" data-cursor aria-hidden="true">
+  <span class="ring"><span class="label" data-cursor-label></span></span>
+  <span class="dot"></span>
+</div>
+
+<style>
+  .cursor {
+    display: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cursor {
+      display: block;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 150;
+      pointer-events: none;
+    }
+    :global(html.has-cursor),
+    :global(html.has-cursor a),
+    :global(html.has-cursor button) {
+      cursor: none;
+    }
+  }
+  .dot,
+  .ring {
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    transform: translate3d(var(--x, -100px), var(--y, -100px), 0) translate(-50%, -50%);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    mix-blend-mode: difference;
+  }
+  .ring {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transform: translate3d(var(--rx, -100px), var(--ry, -100px), 0) translate(-50%, -50%) scale(var(--s, 1));
+    transition:
+      width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.35s,
+      border-color 0.35s;
+    display: grid;
+    place-items: center;
+  }
+  :global(.cursor.hover) .ring {
+    width: 64px;
+    height: 64px;
+    background: rgba(124, 108, 255, 0.15);
+    border-color: rgba(124, 108, 255, 0.8);
+  }
+  :global(.cursor.labelled) .ring {
+    width: 92px;
+    height: 92px;
+    background: #fff;
+    border-color: #fff;
+  }
+  .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #000;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  :global(.cursor.labelled) .label {
+    opacity: 1;
+  }
+  :global(.cursor.labelled) .dot {
+    opacity: 0;
+  }
+</style>

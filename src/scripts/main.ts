@@ -1,48 +1,115 @@
 import Lenis from 'lenis';
 
+const html = document.documentElement;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const wide = window.matchMedia('(min-width: 861px)').matches;
+const clamp = (v: number, a = 0, b = 1) => Math.min(Math.max(v, a), b);
+const map = (v: number, a: number, b: number) => clamp((v - a) / (b - a));
 
-// Nav background once the page scrolls.
-const nav = document.querySelector<HTMLElement>('[data-nav]');
-const onScroll = () => nav?.classList.toggle('scrolled', window.scrollY > 24);
-onScroll();
-window.addEventListener('scroll', onScroll, { passive: true });
+/* ------------------------------------------------------------------ */
+/* Smooth scroll + scroll velocity                                     */
+/* ------------------------------------------------------------------ */
+let lenis: Lenis | null = null;
+let velocity = 0;
+if (!reduceMotion) {
+  lenis = new Lenis({ lerp: 0.09, anchors: { offset: -72 } });
+  lenis.on('scroll', (l: Lenis) => (velocity = l.velocity));
+}
 
-// Reveal elements as they enter the viewport.
-const revealIO = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        revealIO.unobserve(e.target);
+/* ------------------------------------------------------------------ */
+/* Text scramble (decodes text through random glyphs)                  */
+/* ------------------------------------------------------------------ */
+const GLYPHS = '!<>-_\\/[]{}=+*^?#01ABCDEFKXYZ';
+function scramble(el: HTMLElement, duration = 900) {
+  if (reduceMotion) return;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes: { node: Text; text: string }[] = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode as Text;
+    const text = (node as Text & { _orig?: string })._orig ?? node.data;
+    (node as Text & { _orig?: string })._orig = text;
+    if (text.trim()) nodes.push({ node, text });
+  }
+  const t0 = performance.now();
+  const tick = (now: number) => {
+    const k = clamp((now - t0) / duration);
+    for (const { node, text } of nodes) {
+      let out = '';
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        out += ch === ' ' || k > i / text.length + 0.15 ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
       }
+      node.data = k >= 1 ? text : out;
     }
-  },
-  { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
-);
-document.querySelectorAll('.reveal, .split').forEach((el) => revealIO.observe(el));
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+document.querySelectorAll<HTMLElement>('.scramble-hover').forEach((el) => {
+  el.addEventListener('mouseenter', () => scramble(el, 500));
+});
 
-// Lazy videos: attach the source when near the viewport,
-// autoplay while visible (or on hover for "hover" tiles on desktop).
+/* ------------------------------------------------------------------ */
+/* Reveals: fade/blur words, wipe media, scramble kickers              */
+/* ------------------------------------------------------------------ */
+function startReveals() {
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add('in');
+        if (e.target.classList.contains('scramble')) scramble(e.target as HTMLElement);
+        io.unobserve(e.target);
+      }
+    },
+    { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+  );
+  document.querySelectorAll('.reveal, .split, .wipe, .scramble').forEach((el) => io.observe(el));
+}
+
+/* ------------------------------------------------------------------ */
+/* Preloader: 000 → 100, then the curtain lifts                        */
+/* ------------------------------------------------------------------ */
+function runIntro(done: () => void) {
+  const count = document.querySelector<HTMLElement>('[data-preloader-count]');
+  const bar = document.querySelector<HTMLElement>('[data-preloader-bar]');
+  const name = document.querySelector<HTMLElement>('[data-preloader-name]');
+  if (!count || html.classList.contains('intro-done')) return done();
+  lenis?.stop();
+  if (name) scramble(name, 1200);
+  const t0 = performance.now();
+  const dur = 1700;
+  const tick = (now: number) => {
+    const k = clamp((now - t0) / dur);
+    const e = 1 - Math.pow(1 - k, 3);
+    count.textContent = String(Math.round(e * 100)).padStart(3, '0');
+    if (bar) bar.style.transform = `scaleX(${e})`;
+    if (k < 1) return requestAnimationFrame(tick);
+    html.classList.add('intro-leaving');
+    try {
+      sessionStorage.setItem('intro', '1');
+    } catch {}
+    setTimeout(() => {
+      html.classList.add('intro-done');
+      lenis?.start();
+    }, 1000);
+    setTimeout(done, 350);
+  };
+  requestAnimationFrame(tick);
+}
+runIntro(startReveals);
+
+/* ------------------------------------------------------------------ */
+/* Lazy videos                                                         */
+/* ------------------------------------------------------------------ */
 const videos = document.querySelectorAll<HTMLVideoElement>('video.lazy-vid');
-
 const load = (v: HTMLVideoElement) => {
   if (!v.src && v.dataset.src) {
     v.src = v.dataset.src;
     v.preload = 'auto';
   }
 };
-const play = (v: HTMLVideoElement) => {
-  load(v);
-  v.play().catch(() => {});
-  v.closest('.tile')?.classList.add('playing');
-};
-const pause = (v: HTMLVideoElement) => {
-  v.pause();
-  v.closest('.tile')?.classList.remove('playing');
-};
-
 const nearIO = new IntersectionObserver(
   (entries) => {
     for (const e of entries) {
@@ -52,78 +119,180 @@ const nearIO = new IntersectionObserver(
       }
     }
   },
-  { rootMargin: '400px 0px' },
+  { rootMargin: '400px 800px' },
 );
-
 const visibleIO = new IntersectionObserver(
   (entries) => {
     for (const e of entries) {
       const v = e.target as HTMLVideoElement;
       const hoverOnly = v.dataset.mode === 'hover' && canHover;
-      if (e.isIntersecting && !hoverOnly && !reduceMotion) play(v);
-      else if (!e.isIntersecting) pause(v);
+      if (e.isIntersecting && !hoverOnly && !reduceMotion) {
+        load(v);
+        v.play().catch(() => {});
+      } else if (!e.isIntersecting) v.pause();
     }
   },
-  { threshold: 0.25 },
+  { threshold: 0.2 },
 );
-
 videos.forEach((v) => {
   nearIO.observe(v);
   visibleIO.observe(v);
   if (v.dataset.mode === 'hover' && canHover) {
     const tile = v.closest('.tile') ?? v;
-    tile.addEventListener('mouseenter', () => play(v));
-    tile.addEventListener('mouseleave', () => pause(v));
+    tile.addEventListener('mouseenter', () => {
+      load(v);
+      v.play().catch(() => {});
+    });
+    tile.addEventListener('mouseleave', () => v.pause());
   }
 });
 
-// Show the first frame of hover tiles once loaded, so they aren't blank.
-videos.forEach((v) => {
-  v.addEventListener(
-    'loadeddata',
-    () => {
-      if (v.paused && v.currentTime === 0) v.currentTime = 0.5;
-    },
-    { once: true },
+/* ------------------------------------------------------------------ */
+/* Hero film: particles morph with scroll, captions + HUD follow       */
+/* ------------------------------------------------------------------ */
+type Globe = { setProgress(p: number): void; count: number } | null;
+let globe: Globe = null;
+const hero = document.querySelector<HTMLElement>('[data-hero]');
+const heroIntro = hero?.querySelector<HTMLElement>('[data-hero-intro]');
+const caps = hero ? [...hero.querySelectorAll<HTMLElement>('[data-cap]')] : [];
+const heroFill = hero?.querySelector<HTMLElement>('[data-hero-fill]');
+const hudPct = hero?.querySelector<HTMLElement>('[data-hud-pct]');
+const hudCount = hero?.querySelector<HTMLElement>('[data-hud-count]');
+const canvas = hero?.querySelector<HTMLCanvasElement>('[data-globe]');
+if (canvas) {
+  document.fonts.ready.then(() =>
+    import('./globe').then((m) => {
+      globe = m.initGlobe(canvas);
+      if (globe && hudCount) {
+        const n = globe.count;
+        const t0 = performance.now();
+        const tick = (now: number) => {
+          const k = clamp((now - t0) / 2400);
+          hudCount.textContent = `${Math.round(n * (1 - Math.pow(1 - k, 3))).toLocaleString('en-US')} particles`;
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }),
   );
-});
-
-// Smooth scrolling.
-if (!reduceMotion) {
-  const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -72 } });
-  const raf = (time: number) => {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  };
-  requestAnimationFrame(raf);
+}
+const capRanges: [number, number][] = [
+  [0.24, 0.4],
+  [0.49, 0.64],
+  [0.73, 0.88],
+];
+function updateHero() {
+  if (!hero) return;
+  const r = hero.getBoundingClientRect();
+  const span = r.height - window.innerHeight;
+  const p = span > 0 ? clamp(-r.top / span) : 0;
+  globe?.setProgress(p);
+  if (heroIntro) {
+    const fade = 1 - map(p, 0.03, 0.13);
+    heroIntro.style.setProperty('--fade', String(fade));
+    heroIntro.style.setProperty('--lift', `${-p * 260}px`);
+    heroIntro.style.pointerEvents = fade < 0.2 ? 'none' : '';
+  }
+  caps.forEach((c, i) => c.classList.toggle('on', p >= capRanges[i][0] && p <= capRanges[i][1]));
+  if (heroFill) heroFill.style.transform = `scaleX(${p})`;
+  if (hudPct) hudPct.textContent = `${String(Math.round(p * 100)).padStart(3, '0')}%`;
 }
 
-// Hero particle globe.
-const globe = document.querySelector<HTMLCanvasElement>('[data-globe]');
-if (globe) import('./globe').then((m) => m.initGlobe(globe));
-
-// Scroll story: highlight the pillar in view and fill its progress bar.
+/* ------------------------------------------------------------------ */
+/* Services scroll story                                               */
+/* ------------------------------------------------------------------ */
 const story = document.querySelector<HTMLElement>('[data-story]');
-if (story) {
-  const steps = [...story.querySelectorAll<HTMLElement>('[data-story-step]')];
-  const tabs = [...story.querySelectorAll<HTMLElement>('[data-story-tab]')];
-  const update = () => {
-    const mid = window.innerHeight * 0.5;
-    let active = 0;
-    steps.forEach((step, i) => {
-      const r = step.getBoundingClientRect();
-      const p = Math.min(Math.max((mid - r.top) / r.height, 0), 1);
-      tabs[i]?.style.setProperty('--p', String(p));
-      if (r.top < mid) active = i;
-    });
-    steps.forEach((s, i) => s.classList.toggle('active', i === active));
-    tabs.forEach((t, i) => t.classList.toggle('active', i === active));
-  };
-  update();
-  window.addEventListener('scroll', update, { passive: true });
+const steps = story ? [...story.querySelectorAll<HTMLElement>('[data-story-step]')] : [];
+const tabs = story ? [...story.querySelectorAll<HTMLElement>('[data-story-tab]')] : [];
+function updateStory() {
+  if (!story) return;
+  const mid = window.innerHeight * 0.5;
+  let active = 0;
+  steps.forEach((step, i) => {
+    const r = step.getBoundingClientRect();
+    tabs[i]?.style.setProperty('--p', String(clamp((mid - r.top) / r.height)));
+    if (r.top < mid) active = i;
+  });
+  steps.forEach((s, i) => s.classList.toggle('active', i === active));
+  tabs.forEach((t, i) => t.classList.toggle('active', i === active));
 }
 
-// Count numbers up when they come into view ("50–70%" counts both numbers).
+/* ------------------------------------------------------------------ */
+/* Horizontal reel with velocity skew                                  */
+/* ------------------------------------------------------------------ */
+const hs = document.querySelector<HTMLElement>('[data-hscroll]');
+const hsTrack = hs?.querySelector<HTMLElement>('[data-hscroll-track]');
+const hsFill = hs?.querySelector<HTMLElement>('[data-hscroll-fill]');
+let hsDist = 0;
+let skew = 0;
+const hsOn = !!(hs && hsTrack && wide && !reduceMotion);
+function sizeReel() {
+  if (!hsOn) return;
+  hsDist = hsTrack!.scrollWidth - window.innerWidth;
+  hs!.style.height = `${hsDist + window.innerHeight}px`;
+}
+sizeReel();
+window.addEventListener('resize', sizeReel);
+function updateReel() {
+  if (!hsOn) return;
+  const r = hs!.getBoundingClientRect();
+  const p = hsDist > 0 ? clamp(-r.top / hsDist) : 0;
+  skew += (clamp(-velocity * 0.35, -10, 10) - skew) * 0.12;
+  hsTrack!.style.transform = `translate3d(${-p * hsDist}px,0,0) skewX(${skew}deg)`;
+  hsFill?.style.setProperty('--p', String(p));
+}
+
+/* ------------------------------------------------------------------ */
+/* Giant marquee: speed and direction follow scrolling                 */
+/* ------------------------------------------------------------------ */
+const mq = document.querySelector<HTMLElement>('[data-marquee]');
+let mqX = 0;
+let mqDir = -1;
+function updateMarquee() {
+  if (!mq || reduceMotion) return;
+  if (Math.abs(velocity) > 0.2) mqDir = velocity > 0 ? -1 : 1;
+  mqX += mqDir * (0.7 + Math.min(Math.abs(velocity) * 0.5, 24));
+  const third = mq.scrollWidth / 3;
+  if (mqX <= -third) mqX += third;
+  if (mqX > 0) mqX -= third;
+  mq.style.transform = `translate3d(${mqX}px,0,0) skewX(${clamp(-velocity * 0.4, -12, 12)}deg)`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Nav hide/show + scroll progress                                     */
+/* ------------------------------------------------------------------ */
+const nav = document.querySelector<HTMLElement>('[data-nav]');
+const progress = document.querySelector<HTMLElement>('[data-progress]');
+let lastY = window.scrollY;
+function updateChrome() {
+  const y = window.scrollY;
+  const dy = y - lastY;
+  if (!lenis) velocity = dy;
+  nav?.classList.toggle('scrolled', y > 24);
+  if (Math.abs(dy) > 2) nav?.classList.toggle('hidden', dy > 0 && y > 400);
+  lastY = y;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  progress?.style.setProperty('--p', String(max > 0 ? y / max : 0));
+}
+
+/* ------------------------------------------------------------------ */
+/* One frame loop drives everything scroll-linked                      */
+/* ------------------------------------------------------------------ */
+const frame = (time: number) => {
+  lenis?.raf(time);
+  updateChrome();
+  updateHero();
+  updateStory();
+  updateReel();
+  updateMarquee();
+  velocity *= lenis ? 1 : 0.9;
+  requestAnimationFrame(frame);
+};
+requestAnimationFrame(frame);
+
+/* ------------------------------------------------------------------ */
+/* Count-up numbers                                                    */
+/* ------------------------------------------------------------------ */
 const countIO = new IntersectionObserver(
   (entries) => {
     for (const e of entries) {
@@ -133,9 +302,8 @@ const countIO = new IntersectionObserver(
       const template = el.textContent ?? '';
       if (reduceMotion) continue;
       const t0 = performance.now();
-      const dur = 1400;
       const tick = (now: number) => {
-        const k = Math.min((now - t0) / dur, 1);
+        const k = clamp((now - t0) / 1600);
         const ease = 1 - Math.pow(1 - k, 3);
         el.textContent = template.replace(/\d+/g, (n) => String(Math.round(Number(n) * ease)));
         if (k < 1) requestAnimationFrame(tick);
@@ -147,8 +315,11 @@ const countIO = new IntersectionObserver(
 );
 document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
 
-// Cursor spotlight on cards.
-if (canHover) {
+/* ------------------------------------------------------------------ */
+/* Pointer effects (desktop only)                                      */
+/* ------------------------------------------------------------------ */
+if (canHover && !reduceMotion) {
+  // Spotlight that follows the cursor on cards.
   document.querySelectorAll<HTMLElement>('.spot').forEach((el) => {
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
@@ -156,4 +327,70 @@ if (canHover) {
       el.style.setProperty('--my', `${e.clientY - r.top}px`);
     });
   });
+
+  // Magnetic buttons.
+  document.querySelectorAll<HTMLElement>('.magnetic').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      el.style.transform = `translate(${dx * 0.3}px, ${dy * 0.45}px)`;
+    });
+    el.addEventListener('pointerleave', () => (el.style.transform = ''));
+  });
+
+  // 3D tilt + sheen on the closing headline.
+  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      el.style.setProperty('--ry', `${(px - 0.5) * 18}deg`);
+      el.style.setProperty('--rx', `${(0.5 - py) * 14}deg`);
+      el.style.setProperty('--sx', `${px * 100}%`);
+      el.style.setProperty('--sy', `${py * 100}%`);
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--ry', '0deg');
+      el.style.setProperty('--rx', '0deg');
+    });
+  });
+
+  // Custom cursor: a dot plus a lagging ring that reacts to what it's over.
+  const cursor = document.querySelector<HTMLElement>('[data-cursor]');
+  const label = document.querySelector<HTMLElement>('[data-cursor-label]');
+  if (cursor) {
+    html.classList.add('has-cursor');
+    let x = -100,
+      y = -100,
+      rx = -100,
+      ry = -100;
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        cursor.style.setProperty('--x', `${x}px`);
+        cursor.style.setProperty('--y', `${y}px`);
+      },
+      { passive: true },
+    );
+    const follow = () => {
+      rx += (x - rx) * 0.16;
+      ry += (y - ry) * 0.16;
+      cursor.style.setProperty('--rx', `${rx}px`);
+      cursor.style.setProperty('--ry', `${ry}px`);
+      requestAnimationFrame(follow);
+    };
+    requestAnimationFrame(follow);
+    document.addEventListener('pointerover', (e) => {
+      const el = e.target as HTMLElement;
+      const labelled = el.closest<HTMLElement>('[data-cursor-label]');
+      const interactive = el.closest('a, button, input, .spot');
+      cursor.classList.toggle('labelled', !!labelled);
+      cursor.classList.toggle('hover', !labelled && !!interactive);
+      if (label) label.textContent = labelled?.dataset.cursorLabel ?? '';
+    });
+    document.addEventListener('pointerleave', () => cursor.style.setProperty('--x', '-100px'));
+  }
 }

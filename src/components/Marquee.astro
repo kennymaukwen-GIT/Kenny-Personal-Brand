@@ -1,4 +1,5 @@
 ---
+// Giant marquee whose speed and direction follow your scrolling.
 import type { Lang } from '../config/site';
 import { t } from '../i18n';
 
@@ -6,12 +7,19 @@ interface Props {
   lang: Lang;
 }
 const items = t(Astro.props.lang).marquee;
-const loop = [...items, ...items];
+const loop = [...items, ...items, ...items];
 ---
 
 <div class="marquee" aria-label={items.join(', ')}>
-  <div class="track" aria-hidden="true">
-    {loop.map((item) => <span>{item}</span>)}
+  <div class="track" data-marquee aria-hidden="true">
+    {
+      loop.map((item, i) => (
+        <span class:list={['item', { outline: i % 2 === 1 }]}>
+          {item}
+          <i>✳</i>
+        </span>
+      ))
+    }
   </div>
 </div>
 
@@ -19,33 +27,32 @@ const loop = [...items, ...items];
   .marquee {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: 28px 0;
+    padding: 26px 0;
     overflow: hidden;
-    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
   }
   .track {
     display: flex;
-    gap: 64px;
     width: max-content;
-    animation: slide 36s linear infinite;
+    will-change: transform;
   }
-  .marquee:hover .track {
-    animation-play-state: paused;
-  }
-  span {
-    color: var(--muted);
-    font-size: 18px;
+  .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 40px;
+    padding-right: 40px;
+    font-size: clamp(48px, 8vw, 120px);
     font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
     white-space: nowrap;
   }
-  @keyframes slide {
-    to {
-      transform: translateX(calc(-50% - 32px));
-    }
+  .outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.45);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .track {
-      animation: none;
-    }
+  i {
+    font-style: normal;
+    font-size: 0.4em;
+    color: var(--accent);
   }
 </style>

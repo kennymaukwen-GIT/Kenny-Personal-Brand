@@ -261,3 +261,55 @@ html.lenis body {
     transition: none !important;
   }
 }
+
+/* ---------- Scroll progress ---------- */
+.scroll-progress {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+}
+.scroll-progress span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent), #fff);
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+}
+
+/* ---------- Media wipe: grows from a small frame to full ---------- */
+.wipe {
+  clip-path: inset(18% 22% 18% 22% round 24px);
+  transition: clip-path 1.4s var(--ease);
+}
+.wipe :is(video, .vid) {
+  transform: scale(1.35);
+  transition: transform 1.8s var(--ease);
+}
+.wipe.in {
+  clip-path: inset(0 0 0 0 round var(--radius));
+}
+.wipe.in :is(video, .vid) {
+  transform: scale(1);
+}
+
+/* Magnetic buttons move via JS */
+.magnetic {
+  transition:
+    transform 0.5s var(--ease),
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wipe {
+    clip-path: none !important;
+  }
+  .wipe :is(video, .vid) {
+    transform: none !important;
+  }
+}

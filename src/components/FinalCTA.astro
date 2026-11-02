@@ -14,9 +14,12 @@ const method = site.newsletterAction ? 'post' : 'get';
 
 <section class="section final">
   <div class="wrap">
-    <SplitText class="h-xl" text={d.title.join(' ')} />
+    <div class="tilt" data-tilt>
+      <SplitText class="h-xl mega" text={d.title.join(' ')} />
+      <span class="sheen" aria-hidden="true"></span>
+    </div>
     <p class="lead reveal" style="--d:.05s">{d.sub}</p>
-    <a class="btn btn-primary reveal" style="--d:.1s" href={site.bookingUrl} target="_blank" rel="noopener">
+    <a class="btn btn-primary big magnetic reveal" style="--d:.1s" href={site.bookingUrl} target="_blank" rel="noopener">
       {d.primary} <span class="arrow">→</span>
     </a>
 
@@ -41,8 +44,36 @@ const method = site.newsletterAction ? 'post' : 'get';
     justify-items: center;
     text-align: center;
   }
-  h2 {
-    max-width: 14ch;
+  .final {
+    padding: clamp(120px, 16vw, 240px) 0 clamp(80px, 10vw, 140px);
+    overflow: hidden;
+  }
+  .tilt {
+    position: relative;
+    perspective: 900px;
+  }
+  .tilt :global(.mega) {
+    font-size: clamp(56px, 11vw, 168px);
+    max-width: 12ch;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.4s var(--ease);
+    background: radial-gradient(600px circle at var(--sx, 50%) var(--sy, 50%), #fff 0%, #c4bcff 30%, #6b6b78 70%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sheen {
+    position: absolute;
+    inset: -20%;
+    z-index: -1;
+    background: radial-gradient(400px circle at var(--sx, 50%) var(--sy, 50%), rgba(124, 108, 255, 0.25), transparent 60%);
+    filter: blur(30px);
+    pointer-events: none;
+  }
+  .big {
+    height: 56px;
+    padding: 0 28px;
+    font-size: 16px;
   }
   .news {
     margin-top: 72px;
