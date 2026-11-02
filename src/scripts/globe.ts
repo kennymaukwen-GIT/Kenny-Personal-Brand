@@ -17,7 +17,7 @@ import {
 const VERT = /* glsl */ `
 uniform float uTime;
 uniform float uIntro;    // 0→1 assembling from the cloud on load
-uniform float uMorph;    // 0..3: sphere → word1 → word2 → word3
+uniform float uMorph;    // 0..4: sphere → word1 → … → word4
 uniform float uExplode;  // 0→1 at the end of the hero
 uniform float uSpin;
 uniform float uPixel;
@@ -25,6 +25,7 @@ attribute vec3 aStart;
 attribute vec3 aS1;
 attribute vec3 aS2;
 attribute vec3 aS3;
+attribute vec3 aS4;
 attribute float aRand;
 varying float vAlpha;
 varying float vTint;
@@ -41,10 +42,11 @@ void main(){
   float m1 = stagger(clamp(uMorph, 0.0, 1.0));
   float m2 = stagger(clamp(uMorph - 1.0, 0.0, 1.0));
   float m3 = stagger(clamp(uMorph - 2.0, 0.0, 1.0));
-  vec3 p = mix(mix(mix(sphere, aS1, m1), aS2, m2), aS3, m3);
+  float m4 = stagger(clamp(uMorph - 3.0, 0.0, 1.0));
+  vec3 p = mix(mix(mix(mix(sphere, aS1, m1), aS2, m2), aS3, m3), aS4, m4);
 
   // Particles swoop along an arc while travelling between shapes.
-  float travel = sin(m1 * 3.14159) + sin(m2 * 3.14159) + sin(m3 * 3.14159);
+  float travel = sin(m1 * 3.14159) + sin(m2 * 3.14159) + sin(m3 * 3.14159) + sin(m4 * 3.14159);
   p += normalize(aStart) * travel * (0.35 + aRand * 0.6);
 
   // Assemble from the scattered cloud on load.
@@ -119,7 +121,7 @@ export type GlobeController = {
   count: number;
 };
 
-export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.', 'USED.']): GlobeController | null {
+export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.', 'USED.', 'SCALED.']): GlobeController | null {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = window.innerWidth < 760;
 
@@ -182,6 +184,7 @@ export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.',
   geo.setAttribute('aS1', new Float32BufferAttribute(sampleWord(words[0], total, wordWidth), 3));
   geo.setAttribute('aS2', new Float32BufferAttribute(sampleWord(words[1], total, wordWidth), 3));
   geo.setAttribute('aS3', new Float32BufferAttribute(sampleWord(words[2], total, wordWidth), 3));
+  geo.setAttribute('aS4', new Float32BufferAttribute(sampleWord(words[3], total, wordWidth), 3));
 
   const mat = new ShaderMaterial({
     vertexShader: VERT,
@@ -245,8 +248,8 @@ export function initGlobe(canvas: HTMLCanvasElement, words = ['SEEN.', 'FOUND.',
     const u = mat.uniforms;
     u.uTime.value = t;
     if (!reduce) u.uIntro.value = Math.min(t / 2.6, 1);
-    // 0–.12 sphere, then a word each third, explode at the end.
-    u.uMorph.value = map(prog, 0.12, 0.3) + map(prog, 0.4, 0.55) + map(prog, 0.65, 0.8);
+    // Sphere first, then one word per quarter, explode at the end.
+    u.uMorph.value = map(prog, 0.1, 0.22) + map(prog, 0.3, 0.42) + map(prog, 0.5, 0.62) + map(prog, 0.7, 0.82);
     u.uExplode.value = map(prog, 0.88, 1);
     u.uSpin.value = reduce ? 0 : t * 0.12;
     // The sphere sits on the right, words move to the centre.

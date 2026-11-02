@@ -177,9 +177,10 @@ if (canvas) {
   );
 }
 const capRanges: [number, number][] = [
-  [0.24, 0.4],
-  [0.49, 0.64],
-  [0.73, 0.88],
+  [0.2, 0.31],
+  [0.4, 0.51],
+  [0.6, 0.71],
+  [0.8, 0.9],
 ];
 function updateHero() {
   if (!hero) return;

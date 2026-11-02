@@ -2,9 +2,9 @@ import type { Dict } from './en';
 
 export const zh: Dict = {
   meta: {
-    title: '中小企業的 AI 工作室 — Seen. Found. Used.',
+    title: '中小企業的 AI 工作室 — Seen. Found. Used. Scaled.',
     description:
-      '一人 AI 創意科技工作室：AI 影片與視覺、會被 AI 搜尋推薦的網站，以及 App 和客製軟體。服務新創、中小企業與個人品牌。',
+      '一人 AI 工作室，服務新創、中小企業與個人品牌：AI 影片與視覺、會被 AI 搜尋推薦的網站、App 與產品設計，以及讓團隊運作更有效率的客製軟體、流程自動化與 AI 代理人。',
   },
   nav: {
     work: '作品',
@@ -16,21 +16,18 @@ export const zh: Dict = {
   },
   hero: {
     eyebrow: 'AI 原生創意科技工作室',
-    title: ['Seen.', 'Found.', 'Used.'],
-    sub: '大企業擁有的 AI 基礎建設，我們為中小企業重新打造。讓你的品牌讓人停下滑動、成為 AI 搜尋推薦的答案，也成為客戶離不開的工具。',
+    title: ['Seen.', 'Found.', 'Used.', 'Scaled.'],
+    sub: '大企業擁有的 AI 基礎建設，我們為中小企業重新打造。從客戶怎麼看見你，到團隊怎麼運作：品牌與影片、被 AI 推薦的網站、客戶離不開的 App，以及撐起日常營運的內部系統。',
     primary: '預約 30 分鐘診斷',
     secondary: '看作品',
     scroll: '往下',
-    artwork: '無題（Seen. Found. Used.）',
-    medium: '螢幕上的即時生成顏料，2026。移動滑鼠即可攪動顏料。',
-    palette: '色盤',
   },
-  marquee: ['網站設計', 'UI / UX', '動態設計', 'AI 影片', 'AI 廣告', 'AI 視覺', 'AI SEO', 'App 設計', '客製軟體'],
+  marquee: ['網站設計', 'UI / UX', '動態設計', 'AI 影片', 'AI 廣告', 'AI 視覺', 'AI SEO', 'App 設計', '客製軟體', '內部系統', '流程自動化', 'AI 代理人', '系統串接', '數據儀表板'],
   thesis: {
     kicker: '為什麼有這間工作室',
     line: '大企業有整個團隊讓 AI 為他們工作。',
     accent: '你有我們。',
-    body: '一間工作室，取代網站公司、影片團隊和 SEO 公司。因為 AI 負責大量產出，而每一格畫面都由人來把關。',
+    body: '一間工作室，取代網站公司、影片團隊、SEO 公司和軟體外包商。因為 AI 負責大量產出，而每一個決定都由人來把關。',
   },
   pillars: {
     kicker: '我們做什麼',
@@ -52,11 +49,41 @@ export const zh: Dict = {
       {
         key: 'used',
         label: '03 — Used 被使用',
-        title: '成為大家離不開的工具。',
-        body: '讓生意運作更順的介面與軟體，從 App 到內部系統。',
-        list: ['UI / UX 設計', 'App 設計', '客製軟體與工具', '內部系統'],
+        title: '做出客戶離不開的產品。',
+        body: '客戶真正會回來使用的 App 與介面，從設計、原型到開發上線。',
+        list: ['UI / UX 設計', 'iOS 與 Android App', 'Web App 與產品原型', '設計系統'],
+      },
+      {
+        key: 'scaled',
+        label: '04 — Scaled 規模化',
+        title: '讓小公司跑得像大公司。',
+        body: '用客製軟體和 AI 接手團隊的重複工作：更少試算表、更少出錯、更快做決定。',
+        list: ['內部工具與儀表板', '流程自動化', 'AI 助理與代理人', '排程與預約系統', '行事曆、CRM 與 Google Workspace 串接', '報表與數據流程'],
       },
     ],
+  },
+  problems: {
+    kicker: '是不是很熟悉？',
+    title: '從你的問題出發，工具由我們挑。',
+    items: [
+      { pain: '我們的內容看起來跟別人都一樣。', pillar: 'Seen', fix: '由工作室導演的 AI 影片、廣告與視覺。' },
+      { pain: '客人在 Google 或 ChatGPT 上找不到我們。', pillar: 'Found', fix: '為了被推薦而設計的網站與 AI SEO。' },
+      { pain: '我們需要一個客人真的會用的 App。', pillar: 'Used', fix: '從原型到上線的 UI/UX 與 App 設計。' },
+      { pain: '團隊每天被排程、試算表和複製貼上淹沒。', pillar: 'Scaled', fix: '內部工具、流程自動化與 AI 代理人。' },
+      { pain: '公司用的每個工具都各自為政。', pillar: 'Scaled', fix: '串接行事曆、CRM 與 Google Workspace。' },
+      { pain: '東西上線了，卻不知道哪些有效。', pillar: 'Found · Scaled', fix: '成效追蹤、儀表板與每月報告。' },
+    ],
+  },
+  projects: {
+    kicker: '精選專案',
+    title: '一間工作室，四種工作。',
+    items: [
+      { name: '新竹外匯進口與二手車商', pillar: 'Found', body: '網站與 AI SEO。現在會被 AI 搜尋推薦，搜尋來的訪客有 50–70% 成為客戶。', link: 'case' },
+      { name: '餐飲品牌網站', pillar: 'Found · Seen', body: '以品牌為核心的餐廳網站設計與建置。', link: '' },
+      { name: 'Smart Schedule', pillar: 'Used · Scaled', body: '我們自己的 AI 排程 App，串接 Google 日曆與 iOS，也就是我們為企業打造的那種內部效率工具。', link: 'building' },
+      { name: 'AI 影片系列', pillar: 'Seen', body: '十二支電影感 AI 影片，橫跨科幻、超現實、時尚與商業廣告。', link: 'work' },
+    ],
+    more: '閱讀完整案例',
   },
   caseFeature: {
     kicker: '案例 · 新竹外匯進口與二手車商',
@@ -91,7 +118,8 @@ export const zh: Dict = {
       { service: '網站＋AI SEO 基礎', note: '內容架構、結構化資料、Search Console、AI 能見度報告', prices: ['—', '£1,200 起', '£3,000 起'] },
       { service: 'AI SEO 月費', note: '每月監測、內容與能見度追蹤', prices: ['£300／月起', '£600／月起', '£1,000／月起'] },
       { service: 'AI 影片與廣告', note: '每支完成的影片', prices: ['£50 起', '£150 起', '£800 起'] },
-      { service: 'App 與客製軟體', note: '先進行付費需求診斷（£300 起）再報價', prices: ['', '另行報價', ''] },
+      { service: 'App 與產品設計', note: 'UI/UX、產品原型、iOS／Android／Web App', prices: ['', '另行報價', ''] },
+      { service: '內部系統與流程自動化', note: '客製系統、AI 代理人與系統串接，先進行付費需求診斷（£300 起）再報價', prices: ['', '另行報價', ''] },
     ],
     footnote: '以上為起價，正式報價在 30 分鐘免費通話後提供。AI SEO 每個城市每個產業只服務一家。',
     cta: '索取報價',
@@ -100,7 +128,7 @@ export const zh: Dict = {
     kicker: '工作方式',
     title: '人的判斷，AI 的速度。',
     steps: [
-      { n: '01', title: '診斷', body: '先檢查人和 AI 現在怎麼看你的品牌。' },
+      { n: '01', title: '診斷', body: '盤點客戶、AI 搜尋，以及你自己的團隊，現在怎麼經歷你的生意。' },
       { n: '02', title: '導演', body: '生成任何東西之前，先定好清楚的創意與結構規劃。' },
       { n: '03', title: '生成', body: 'AI 大量產出，原本要幾週的製作縮短成幾天。' },
       { n: '04', title: '精修與上線', body: '人工逐格、逐行修整，上線後持續追蹤成效。' },
@@ -109,13 +137,13 @@ export const zh: Dict = {
   building: {
     kicker: '正在打造',
     title: 'Smart Schedule',
-    body: '我們自己的產品：一款橫跨 Google 日曆和 iOS 的 AI 排程工具，支援中英文。公開開發，由幫你打造產品的同一個工作室製作。',
+    body: '我們自己的產品，也是 Scaled 這一段的證明：串接 Google 日曆與 iOS 的 AI 排程工具，支援中英文，正是我們為企業打造的那種內部工具。公開開發中。',
     status: '即將上線',
     cta: '追蹤開發進度',
   },
   final: {
     title: ['讓你成為', '那個答案。'],
-    sub: '預約 30 分鐘免費診斷。無論最後是否合作，你都會清楚知道 AI 怎麼看你的品牌。',
+    sub: '預約 30 分鐘免費診斷。無論最後是否合作，你都會清楚知道 AI 在哪裡最能幫到你：品牌、網站、產品，還是內部營運。',
     primary: '預約通話',
     newsletterTitle: 'Build Log',
     newsletterBody: '每月一封：經營 AI 工作室、公開打造 App 的過程紀錄。',

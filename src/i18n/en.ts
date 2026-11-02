@@ -1,8 +1,8 @@
 export const en = {
   meta: {
-    title: 'AI Studio for Small Business — Seen. Found. Used.',
+    title: 'AI Studio for Small Business — Seen. Found. Used. Scaled.',
     description:
-      'A one-person AI-native creative tech studio. AI film and visuals, websites built to be recommended by AI search, and apps and custom software — for startups, small businesses and personal brands.',
+      'A one-person AI-native studio for startups, small businesses and personal brands: AI film and visuals, websites recommended by AI search, app and product design, and custom software, automation and AI agents that make your team run better.',
   },
   nav: {
     work: 'Work',
@@ -14,14 +14,11 @@ export const en = {
   },
   hero: {
     eyebrow: 'AI-native creative tech studio',
-    title: ['Seen.', 'Found.', 'Used.'],
-    sub: 'The AI infrastructure big companies have — rebuilt for small businesses. We make your brand impossible to scroll past, the answer AI search recommends, and the tool your customers keep.',
+    title: ['Seen.', 'Found.', 'Used.', 'Scaled.'],
+    sub: 'The AI infrastructure big companies have — rebuilt for small businesses. From how customers see you to how your team works: brand and film, websites AI search recommends, apps people keep, and internal software that runs your operations.',
     primary: 'Book a 30-min diagnosis',
     secondary: 'See the reel',
     scroll: 'Scroll',
-    artwork: 'Untitled (Seen. Found. Used.)',
-    medium: 'Live generative pigment on screen, 2026. Move to stir the paint.',
-    palette: 'Palette',
   },
   marquee: [
     'Web Design',
@@ -33,12 +30,17 @@ export const en = {
     'AI SEO',
     'App Design',
     'Custom Software',
+    'Internal Tools',
+    'Automation',
+    'AI Agents',
+    'Integrations',
+    'Dashboards',
   ],
   thesis: {
     kicker: 'Why this studio exists',
     line: 'Giants have whole teams making AI work for them.',
     accent: 'You have us.',
-    body: 'One studio replaces the web agency, the video crew and the SEO firm — because AI does the heavy lifting and a human directs every frame.',
+    body: 'One studio replaces the web agency, the video crew, the SEO firm and the software house — because AI does the heavy lifting and a human directs every decision.',
   },
   pillars: {
     kicker: 'What we do',
@@ -60,11 +62,41 @@ export const en = {
       {
         key: 'used',
         label: '03 — Used',
-        title: 'Be the tool people keep.',
-        body: 'Interfaces and software that make your business run smoother — from apps to internal systems.',
-        list: ['UI / UX design', 'App design', 'Custom software & tools', 'Internal systems'],
+        title: 'Be the product people keep.',
+        body: 'Apps and interfaces your customers actually come back to — designed, prototyped and built.',
+        list: ['UI / UX design', 'iOS & Android apps', 'Web apps & prototypes', 'Design systems'],
+      },
+      {
+        key: 'scaled',
+        label: '04 — Scaled',
+        title: 'Run like a bigger company.',
+        body: 'Custom software and AI that take repetitive work off your team — fewer spreadsheets, fewer mistakes, faster decisions.',
+        list: ['Internal tools & dashboards', 'Workflow automation', 'AI assistants & agents', 'Scheduling & booking systems', 'Calendar, CRM & Workspace integrations', 'Reporting & data pipelines'],
       },
     ],
+  },
+  problems: {
+    kicker: 'Sound familiar?',
+    title: 'Start from the problem. We pick the tools.',
+    items: [
+      { pain: 'Our content looks like everyone else’s.', pillar: 'Seen', fix: 'AI film, ads and visuals, directed in-house.' },
+      { pain: 'Customers can’t find us on Google or ChatGPT.', pillar: 'Found', fix: 'A website and AI SEO built to be recommended.' },
+      { pain: 'We need an app our customers will actually use.', pillar: 'Used', fix: 'UI/UX and app design, from prototype to launch.' },
+      { pain: 'Our team drowns in scheduling, spreadsheets and copy-paste.', pillar: 'Scaled', fix: 'Internal tools, automation and AI agents.' },
+      { pain: 'Every tool we use lives in its own silo.', pillar: 'Scaled', fix: 'Integrations across calendar, CRM and Google Workspace.' },
+      { pain: 'We launched, but can’t tell what’s working.', pillar: 'Found · Scaled', fix: 'Tracking, dashboards and monthly reporting.' },
+    ],
+  },
+  projects: {
+    kicker: 'Selected projects',
+    title: 'One studio. Four kinds of work.',
+    items: [
+      { name: 'Import & used-car dealer, Hsinchu', pillar: 'Found', body: 'Website and AI SEO. Now recommended by AI search — 50–70% of search visitors become customers.', link: 'case' },
+      { name: 'Restaurant website', pillar: 'Found · Seen', body: 'Brand-led website design and build for a restaurant.', link: '' },
+      { name: 'Smart Schedule', pillar: 'Used · Scaled', body: 'Our own AI scheduling app across Google Calendar and iOS — the same kind of internal tool we build for teams.', link: 'building' },
+      { name: 'AI film series', pillar: 'Seen', body: 'Twelve cinematic AI films across sci-fi, surreal, fashion and commercial.', link: 'work' },
+    ],
+    more: 'Read the case study',
   },
   caseFeature: {
     kicker: 'Case study · Import & used-car dealer, Hsinchu',
@@ -99,7 +131,8 @@ export const en = {
       { service: 'Website + AI SEO foundation', note: 'Content architecture, structured data, Search Console, AI visibility report', prices: ['—', 'from £1,200', 'from £3,000'] },
       { service: 'AI SEO care', note: 'Monthly monitoring, content and visibility tracking', prices: ['from £300/mo', 'from £600/mo', 'from £1,000/mo'] },
       { service: 'AI film & ads', note: 'Per finished video', prices: ['from £50', 'from £150', 'from £800'] },
-      { service: 'Apps & custom software', note: 'Scoped after a paid discovery sprint (from £300)', prices: ['', 'Quote', ''] },
+      { service: 'App & product design', note: 'UI/UX, prototypes, iOS / Android / web apps', prices: ['', 'Quote', ''] },
+      { service: 'Internal tools & automation', note: 'Custom systems, AI agents and integrations — scoped after a paid discovery sprint (from £300)', prices: ['', 'Quote', ''] },
     ],
     footnote: 'Starting prices. Final quote after a free 30-minute call. One client per industry per city for AI SEO.',
     cta: 'Get a quote',
@@ -108,7 +141,7 @@ export const en = {
     kicker: 'How we work',
     title: 'Human judgment. AI speed.',
     steps: [
-      { n: '01', title: 'Diagnose', body: 'We check how people — and AI — see your brand today.' },
+      { n: '01', title: 'Diagnose', body: 'We map how customers, AI search and your own team experience the business today.' },
       { n: '02', title: 'Direct', body: 'A clear creative and structural plan before anything is generated.' },
       { n: '03', title: 'Generate', body: 'AI produces at volume. Weeks of production become days.' },
       { n: '04', title: 'Refine & ship', body: 'A human edits every frame and line, then we launch and measure.' },
@@ -117,13 +150,13 @@ export const en = {
   building: {
     kicker: 'Now building',
     title: 'Smart Schedule',
-    body: 'Our own product: an AI scheduler that works across Google Calendar and iOS, in English and Chinese. Built in public, by the same studio that builds for you.',
+    body: 'Our own product, and proof of the Scaled pillar: an AI scheduler that connects Google Calendar and iOS, in English and Chinese — the kind of internal tool we build for clients. Built in public.',
     status: 'Launching soon',
     cta: 'Follow the build',
   },
   final: {
     title: ['Let’s make you', 'the answer.'],
-    sub: 'Book a free 30-minute diagnosis. You’ll leave with a clear view of how AI sees your brand — whether or not we work together.',
+    sub: 'Book a free 30-minute diagnosis. You’ll leave knowing where AI will help most — your brand, your website, your product or your operations — whether or not we work together.',
     primary: 'Book a call',
     newsletterTitle: 'Build Log',
     newsletterBody: 'Monthly notes on running an AI studio and building an app in public.',

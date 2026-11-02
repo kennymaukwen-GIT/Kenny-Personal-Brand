@@ -1,6 +1,6 @@
 # Kairo Studio — website
 
-AI-native creative tech studio site. **Seen. Found. Used.**
+AI-native studio site. **Seen. Found. Used. Scaled.** — brand & film, web & AI SEO, apps & product, internal software & automation.
 Minimal, Scale-style design (black, one sans-serif typeface, one accent). Built with [Astro](https://astro.build) as a static site, English by default with a full Traditional Chinese version at `/zh-tw/`.
 
 ## Run it

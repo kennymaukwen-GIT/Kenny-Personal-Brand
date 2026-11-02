@@ -1,0 +1,149 @@
+---
+// Problem-first entry point: each pain row reveals the pillar and the fix.
+import type { Lang } from '../config/site';
+import { t } from '../i18n';
+import SplitText from './SplitText.astro';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).problems;
+---
+
+<section class="section" id="problems">
+  <div class="wrap">
+    <p class="kicker scramble">{d.kicker}</p>
+    <SplitText class="h-lg" text={d.title} />
+    <ol class="rows">
+      {
+        d.items.map((it, i) => (
+          <li class="row reveal" style={`--d:${i * 0.05}s`}>
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="pain">{it.pain}</span>
+            <span class="tag">{it.pillar}</span>
+            <span class="fix">→ {it.fix}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .wrap {
+    display: grid;
+    gap: 24px;
+  }
+  .rows {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .row {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    grid-template-areas:
+      'n pain tag'
+      'n fix fix';
+    align-items: baseline;
+    column-gap: 24px;
+    padding: 26px 8px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    transition: color 0.4s;
+  }
+  .row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(124, 108, 255, 0.22), rgba(124, 108, 255, 0.04));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s var(--ease);
+  }
+  .n {
+    grid-area: n;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .pain {
+    grid-area: pain;
+    font-size: clamp(22px, 2.8vw, 38px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    transition: transform 0.6s var(--ease);
+  }
+  .tag {
+    grid-area: tag;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    color: var(--fg-2);
+    white-space: nowrap;
+    transition: background 0.4s, color 0.4s, border-color 0.4s;
+  }
+  .fix {
+    grid-area: fix;
+    color: var(--accent);
+    font-size: 16px;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      max-height 0.5s var(--ease),
+      opacity 0.4s,
+      transform 0.5s var(--ease),
+      margin 0.5s var(--ease);
+  }
+  @media (hover: hover) {
+    .rows:hover .row {
+      color: var(--muted);
+    }
+    .rows .row:hover {
+      color: var(--fg);
+    }
+    .row:hover::before {
+      transform: scaleX(1);
+    }
+    .row:hover .pain {
+      transform: translateX(12px);
+    }
+    .row:hover .tag {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .row:hover .fix {
+      max-height: 40px;
+      opacity: 1;
+      transform: none;
+      margin-top: 10px;
+    }
+  }
+  @media (hover: none), (max-width: 700px) {
+    .fix {
+      max-height: none;
+      opacity: 1;
+      transform: none;
+      margin-top: 8px;
+    }
+  }
+  @media (max-width: 700px) {
+    .row {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'n' 'pain' 'tag' 'fix';
+      row-gap: 8px;
+    }
+    .tag {
+      justify-self: start;
+    }
+  }
+</style>

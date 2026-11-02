@@ -35,7 +35,7 @@ const caps = d.pillars.items;
       {
         caps.map((c, i) => (
           <div class="cap" data-cap={i}>
-            <span class="num">0{i + 1} / 03</span>
+            <span class="num">0{i + 1} / 0{caps.length}</span>
             <strong>{c.title}</strong>
             <span class="muted">{c.list.slice(0, 3).join(' · ')}</span>
           </div>
@@ -54,7 +54,7 @@ const caps = d.pillars.items;
 <style>
   .hero {
     position: relative;
-    height: 420vh;
+    height: 520vh;
   }
   .stage {
     position: sticky;
