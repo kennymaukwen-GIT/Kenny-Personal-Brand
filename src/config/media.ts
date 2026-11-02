@@ -1,6 +1,7 @@
 // Video library generated with Higgsfield (Seedance 2.5).
-// These are 480p drafts served from Higgsfield's CDN. When the 1080p versions are
-// finalized, replace `src` with the new URL or a self-hosted file in /public/media.
+// Served from Higgsfield's CDN. 1080p: convergence, skywhale, chrome, koi, concept, monolith.
+// The rest are 480p drafts (expire ~7 days after 2026-11-02) — finalize or replace them.
+// For production, consider self-hosting compressed copies in /public/media.
 
 const CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_37rqmscBmkIXk1oc6RKnNRalhAb';
 
@@ -21,7 +22,7 @@ const clip = (id: string, file: string, title: Clip['title'], genre: Clip['genre
 export const clips = {
   convergence: clip(
     'convergence',
-    'hf_20261102_173555_0809ec3a-e2b1-417b-bec4-4903ad254e65',
+    'hf_20261102_193050_53bb35da-88e8-435e-9335-9d3aa9f291d2',
     { en: 'Convergence', 'zh-tw': '收斂' },
     { en: 'Tech', 'zh-tw': '科技' },
   ),
@@ -33,13 +34,13 @@ export const clips = {
   ),
   skywhale: clip(
     'skywhale',
-    'hf_20261102_173555_fa6d4609-6c84-49e6-85f1-ce5d9c0b973c',
+    'hf_20261102_193049_12f526da-8b1b-40df-ae85-89837b504243',
     { en: 'Night Whale', 'zh-tw': '夜鯨' },
     { en: 'Surreal', 'zh-tw': '超現實' },
   ),
   chrome: clip(
     'chrome',
-    'hf_20261102_173732_c4164a4e-58f0-4496-bd81-44eade6c61f3',
+    'hf_20261102_193051_f88403b0-1ec7-494d-8eb3-3d342bcd01ca',
     { en: 'Liquid Chrome', 'zh-tw': '液態鉻' },
     { en: 'Art', 'zh-tw': '藝術' },
   ),
@@ -51,7 +52,7 @@ export const clips = {
   ),
   koi: clip(
     'koi',
-    'hf_20261102_173555_081b5a95-46d1-44ac-bf40-dab234377e2c',
+    'hf_20261102_193050_698e29c5-86e9-4137-b592-8c89c7b9ac5e',
     { en: 'Neon Koi', 'zh-tw': '霓虹錦鯉' },
     { en: 'Cyberpunk', 'zh-tw': '賽博龐克' },
   ),
@@ -75,7 +76,7 @@ export const clips = {
   ),
   concept: clip(
     'concept',
-    'hf_20261102_173555_2afc0938-0bc7-4fea-959f-1463715286b8',
+    'hf_20261102_193050_736f2d67-7c89-4782-bc88-b7117cf8c998',
     { en: 'Concept Car', 'zh-tw': '概念跑車' },
     { en: 'Commercial', 'zh-tw': '商業廣告' },
   ),
@@ -87,7 +88,7 @@ export const clips = {
   ),
   monolith: clip(
     'monolith',
-    'hf_20261102_173556_5e71197a-2ec7-4822-befa-479a21781d4f',
+    'hf_20261102_193050_a6e20950-843b-48a2-9c1c-61a845377607',
     { en: 'Monolith', 'zh-tw': '巨碑' },
     { en: 'Sci-fi', 'zh-tw': '科幻' },
   ),

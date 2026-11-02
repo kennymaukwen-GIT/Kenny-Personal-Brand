@@ -30,7 +30,7 @@ Deploy `dist/` to any static host (Cloudflare Pages, Vercel, Netlify). Build com
 - [ ] Real booking link (Cal.com) → `site.bookingUrl`.
 - [ ] Real email → `site.email`.
 - [ ] Newsletter provider form URL → `site.newsletterAction` (until then the form opens an email).
-- [ ] Finalize the Higgsfield drafts to 1080p and replace the URLs in `media.ts` (drafts expire 7 days after generation). Ideally self-host them in `public/media/` compressed to ~2–4 MB each.
+- [ ] Six clips are 1080p already. Six are still 480p drafts that expire ~7 days after 2026-11-02 (orbital, network, door, orrery, inkwash, butterflies): finalize or replace them in `media.ts`. Ideally self-host them in `public/media/` compressed to ~2–4 MB each.
 - [ ] Social profiles → `site.social`.
 - [ ] Confirm case-study numbers and whether the client can be named.
 
