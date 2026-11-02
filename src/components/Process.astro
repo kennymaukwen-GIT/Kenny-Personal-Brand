@@ -1,0 +1,78 @@
+---
+import type { Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).process;
+---
+
+<section class="section process">
+  <div class="wrap">
+    <p class="kicker reveal">{d.kicker}</p>
+    <h2 class="h-lg reveal" style="--d:.1s">{d.title}</h2>
+    <ol class="steps">
+      {
+        d.steps.map((s, i) => (
+          <li class="step reveal" style={`--d:${i * 0.1}s`}>
+            <span class="n">{s.n}</span>
+            <h3 class="h-md">{s.title}</h3>
+            <p>{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .wrap {
+    display: grid;
+    gap: 24px;
+  }
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 40px 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    counter-reset: step;
+  }
+  .step {
+    position: relative;
+    padding: 28px 24px 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(17, 20, 27, 0.8), rgba(17, 20, 27, 0.2));
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    transition: border-color 0.4s, transform 0.5s var(--ease);
+  }
+  .step:hover {
+    border-color: rgba(91, 140, 255, 0.5);
+    transform: translateY(-4px);
+  }
+  .n {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent-2);
+  }
+  .step p {
+    margin: 0;
+    color: var(--fg-2);
+    font-size: 15px;
+  }
+  @media (max-width: 960px) {
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

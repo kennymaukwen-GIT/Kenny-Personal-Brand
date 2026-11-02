@@ -1,0 +1,145 @@
+---
+import { site, type Lang } from '../config/site';
+import { t, localePath, otherLang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang, path } = Astro.props;
+const d = t(lang);
+const home = localePath(lang, '/');
+const links = [
+  { href: `${home}#work`, label: d.nav.work },
+  { href: `${home}#services`, label: d.nav.services },
+  { href: localePath(lang, '/work/hsinchu-car-dealer'), label: d.nav.caseStudy },
+  { href: `${home}#building`, label: d.nav.building },
+];
+---
+
+<header class="nav" data-nav>
+  <div class="nav-inner">
+    <a class="brand" href={home} aria-label={site.name}>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">{site.shortName}<span class="muted">&nbsp;Studio</span></span>
+    </a>
+    <nav class="links" aria-label="Primary">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+    <div class="actions">
+      <a class="lang" href={localePath(otherLang(lang), path)} hreflang={otherLang(lang) === 'en' ? 'en' : 'zh-Hant-TW'}>
+        {d.nav.langLabel}
+      </a>
+      <a class="btn btn-primary nav-cta" href={site.bookingUrl} target="_blank" rel="noopener">
+        {d.nav.cta}
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    padding: 14px var(--gutter);
+    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(5, 6, 8, 0.72);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-color: var(--line);
+  }
+  .nav-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-size: 18px;
+  }
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--fg);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    top: 2px;
+    right: 1px;
+    animation: orbit 6s linear infinite;
+    transform-origin: -3px 7px;
+  }
+  @keyframes orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .links {
+    display: flex;
+    gap: 32px;
+    font-size: 15px;
+    color: var(--fg-2);
+  }
+  .links a {
+    transition: color 0.3s;
+  }
+  .links a:hover {
+    color: var(--fg);
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .lang {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--fg-2);
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+  .lang:hover {
+    color: var(--fg);
+    border-color: var(--line-strong);
+  }
+  .nav-cta {
+    height: 40px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  @media (max-width: 860px) {
+    .links {
+      display: none;
+    }
+  }
+  @media (max-width: 420px) {
+    .brand-name .muted {
+      display: none;
+    }
+    .nav-cta {
+      padding: 0 14px;
+    }
+  }
+</style>

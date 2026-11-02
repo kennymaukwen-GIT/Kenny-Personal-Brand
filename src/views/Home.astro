@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Thesis from '../components/Thesis.astro';
+import Pillars from '../components/Pillars.astro';
+import CaseFeature from '../components/CaseFeature.astro';
+import WorkGrid from '../components/WorkGrid.astro';
+import Pricing from '../components/Pricing.astro';
+import Process from '../components/Process.astro';
+import Building from '../components/Building.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { site, type Lang } from '../config/site';
+import { heroClip } from '../config/media';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+
+// Pricing rows double as an FAQ for AI assistants and rich results.
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: lang === 'en' ? `What does ${site.name} do?` : `${site.name} 做什麼？`,
+      acceptedAnswer: { '@type': 'Answer', text: d.meta.description },
+    },
+    ...d.pricing.rows.map((r) => ({
+      '@type': 'Question',
+      name: lang === 'en' ? `How much does "${r.service}" cost?` : `「${r.service}」多少錢？`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `${r.note}. ${d.pricing.tiers.map((tier, i) => (r.prices[i] ? `${tier.name}: ${r.prices[i]}` : '')).filter(Boolean).join(' · ')}. ${d.pricing.footnote}`,
+      },
+    })),
+  ],
+};
+---
+
+<Base lang={lang} path="/" jsonLd={[faq]} preloadVideo={heroClip.src}>
+  <Hero lang={lang} />
+  <Marquee lang={lang} />
+  <Thesis lang={lang} />
+  <Pillars lang={lang} />
+  <CaseFeature lang={lang} />
+  <WorkGrid lang={lang} />
+  <Pricing lang={lang} />
+  <Process lang={lang} />
+  <Building lang={lang} />
+  <FinalCTA lang={lang} />
+</Base>

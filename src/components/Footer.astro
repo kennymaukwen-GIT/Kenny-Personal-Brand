@@ -1,0 +1,96 @@
+---
+import { site, type Lang } from '../config/site';
+import { t, localePath, otherLang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang, path } = Astro.props;
+const d = t(lang);
+const year = new Date().getFullYear();
+const social = Object.entries(site.social).filter(([, url]) => url);
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="giant" aria-hidden="true">{site.tagline}</div>
+    <div class="row">
+      <div class="col">
+        <strong>{site.name}</strong>
+        <span class="muted">{site.location}</span>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+      <div class="col links">
+        {social.map(([name, url]) => <a href={url} target="_blank" rel="noopener">{name}</a>)}
+        <a href={localePath(lang, '/privacy')}>{d.footer.privacy}</a>
+        <a href={localePath(otherLang(lang), path)}>{d.nav.langLabel}</a>
+      </div>
+    </div>
+    <div class="row small muted">
+      <span>© {year} {site.name}. {d.footer.rights}</span>
+      <span class="built"><span class="dot"></span>{d.footer.built}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--line);
+    padding: 72px 0 40px;
+    overflow: hidden;
+  }
+  .giant {
+    font-size: clamp(44px, 11.5vw, 176px);
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    white-space: nowrap;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 56px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    text-transform: capitalize;
+    color: var(--fg-2);
+  }
+  .links a:hover,
+  .col a:hover {
+    color: var(--accent-2);
+  }
+  .small {
+    font-size: 14px;
+    margin: 0;
+  }
+  .built {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3ddc84;
+    box-shadow: 0 0 10px #3ddc84;
+  }
+</style>

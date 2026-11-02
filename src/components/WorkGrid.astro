@@ -1,0 +1,132 @@
+---
+import type { Lang } from '../config/site';
+import { reel } from '../config/media';
+import { t } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang).work;
+// Bento rhythm: which tiles are large.
+const big = new Set([0, 5, 8]);
+---
+
+<section class="section work" id="work">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="kicker reveal">{d.kicker}</p>
+        <h2 class="h-lg reveal" style="--d:.1s">{d.title}</h2>
+      </div>
+      <p class="lead reveal" style="--d:.2s">{d.sub}</p>
+    </div>
+
+    <div class="grid">
+      {
+        reel.map((c, i) => (
+          <figure class={`tile reveal ${big.has(i) ? 'big' : ''}`} style={`--d:${(i % 3) * 0.08}s`}>
+            <LazyVideo src={c.src} mode="hover" label={`${c.title[lang]} — ${c.genre[lang]}`} />
+            <figcaption>
+              <span class="idx">{String(i + 1).padStart(2, '0')}</span>
+              <span class="name">{c.title[lang]}</span>
+              <span class="genre">{c.genre[lang]}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px 48px;
+    margin-bottom: 56px;
+  }
+  .head > div {
+    flex: 1 1 520px;
+  }
+  .head .h-lg {
+    max-width: 14ch;
+    margin-top: 20px;
+  }
+  .head .lead {
+    flex: 0 1 36ch;
+    margin: 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: dense;
+    gap: 14px;
+  }
+  .tile {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 16 / 10;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .tile.big {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+  .tile :global(video) {
+    transition: transform 1.2s var(--ease), filter 0.6s;
+    filter: saturate(0.85) brightness(0.8);
+  }
+  .tile:hover :global(video),
+  .tile.playing :global(video) {
+    transform: scale(1.05);
+    filter: saturate(1.05) brightness(1);
+  }
+  figcaption {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 40px 16px 14px;
+    background: linear-gradient(0deg, rgba(5, 6, 8, 0.85), transparent);
+    font-size: 15px;
+  }
+  .idx,
+  .genre {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .name {
+    font-weight: 500;
+  }
+  .genre {
+    margin-left: auto;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .tile.big {
+      grid-column: auto;
+      grid-row: auto;
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

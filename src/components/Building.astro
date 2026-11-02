@@ -1,0 +1,95 @@
+---
+import type { Lang } from '../config/site';
+import { clips } from '../config/media';
+import { t } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).building;
+---
+
+<section class="section building" id="building">
+  <div class="wrap">
+    <div class="card reveal">
+      <div class="media" aria-hidden="true">
+        <LazyVideo src={clips.orrery.src} />
+      </div>
+      <div class="body">
+        <p class="kicker">{d.kicker}</p>
+        <h2 class="h-lg">{d.title}</h2>
+        <span class="pill"><span class="pulse"></span>{d.status}</span>
+        <p class="lead">{d.body}</p>
+        <a class="btn btn-ghost" href="#buildlog">{d.cta} <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .media {
+    position: relative;
+    min-height: 420px;
+  }
+  .media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 50%, var(--bg-2));
+  }
+  .body {
+    padding: clamp(32px, 5vw, 64px);
+    display: grid;
+    gap: 22px;
+    align-content: center;
+    justify-items: start;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 181, 71, 0.4);
+    color: var(--beacon);
+  }
+  .pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--beacon);
+    animation: pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.6);
+    }
+    100% {
+      box-shadow: 0 0 0 12px rgba(255, 181, 71, 0);
+    }
+  }
+  @media (max-width: 860px) {
+    .card {
+      grid-template-columns: 1fr;
+    }
+    .media {
+      min-height: 260px;
+    }
+    .media::after {
+      background: linear-gradient(180deg, transparent 50%, var(--bg-2));
+    }
+  }
+</style>

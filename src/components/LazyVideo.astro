@@ -1,0 +1,22 @@
+---
+// Loads the video only when it gets near the viewport, plays while visible,
+// pauses when off-screen. `mode="hover"` plays on hover on desktop instead.
+interface Props {
+  src: string;
+  label?: string;
+  mode?: 'auto' | 'hover';
+  class?: string;
+}
+const { src, label, mode = 'auto', class: cls = '' } = Astro.props;
+---
+
+<video
+  class:list={['vid', 'lazy-vid', cls]}
+  data-src={src}
+  data-mode={mode}
+  muted
+  loop
+  playsinline
+  preload="none"
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}></video>

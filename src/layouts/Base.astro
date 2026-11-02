@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site, type Lang } from '../config/site';
+import { t, localePath } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Path without the language prefix, e.g. "/" or "/work/hsinchu-car-dealer". */
+  path: string;
+  title?: string;
+  description?: string;
+  jsonLd?: Record<string, unknown>[];
+  /** Preload a video in <head> (the hero). */
+  preloadVideo?: string;
+}
+
+const { lang, path, title, description, jsonLd = [], preloadVideo } = Astro.props;
+const d = t(lang);
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} — ${d.meta.title}`;
+const pageDesc = description ?? d.meta.description;
+const canonical = new URL(localePath(lang, path), site.url).href;
+const enUrl = new URL(localePath('en', path), site.url).href;
+const zhUrl = new URL(localePath('zh-tw', path), site.url).href;
+const sameAs = Object.values(site.social).filter(Boolean);
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${site.url}/#studio`,
+  name: site.name,
+  url: site.url,
+  description: d.meta.description,
+  slogan: site.tagline,
+  email: site.email,
+  areaServed: 'Worldwide',
+  address: { '@type': 'PostalAddress', addressCountry: 'TW' },
+  founder: { '@type': 'Person', name: site.founder },
+  knowsAbout: [
+    'AI SEO',
+    'Generative engine optimization',
+    'Website design',
+    'UI/UX design',
+    'App design',
+    'AI video production',
+    'AI image generation',
+    'Motion design',
+    'Custom software',
+  ],
+  makesOffer: d.pricing.rows.map((r) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name: r.service, description: r.note },
+  })),
+  ...(sameAs.length ? { sameAs } : {}),
+};
+const allLd = [orgLd, ...jsonLd];
+---
+
+<!doctype html>
+<html lang={lang === 'en' ? 'en' : 'zh-Hant-TW'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="zh-Hant-TW" href={zhUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
+    <meta name="theme-color" content="#050608" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'zh_TW'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href={`https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1${lang === 'zh-tw' ? '&family=Noto+Sans+TC:wght@400;500;700' : ''}&display=swap`}
+    />
+    {preloadVideo && <link rel="preconnect" href={new URL(preloadVideo).origin} crossorigin />}
+
+    {allLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
+  </head>
+  <body data-lang={lang}>
+    <div class="glow" aria-hidden="true"></div>
+    <Nav lang={lang} path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} path={path} />
+    <script src="../scripts/main.ts"></script>
+  </body>
+</html>

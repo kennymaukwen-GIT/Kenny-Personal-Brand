@@ -1,0 +1,153 @@
+---
+import { site, type Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).pricing;
+---
+
+<section class="section pricing" id="services">
+  <div class="wrap">
+    <p class="kicker reveal">{d.kicker}</p>
+    <h2 class="h-lg reveal" style="--d:.1s">{d.title}</h2>
+    <p class="lead reveal" style="--d:.2s">{d.sub}</p>
+
+    <div class="table reveal" role="table" aria-label={d.title}>
+      <div class="tr thead" role="row">
+        <div class="th svc" role="columnheader"></div>
+        {
+          d.tiers.map((tier, i) => (
+            <div class={`th tier ${i === 1 ? 'hl' : ''}`} role="columnheader">
+              <strong>{tier.name}</strong>
+              <span>{tier.body}</span>
+            </div>
+          ))
+        }
+      </div>
+      {
+        d.rows.map((r) => (
+          <div class="tr" role="row">
+            <div class="td svc" role="rowheader">
+              <strong>{r.service}</strong>
+              <span>{r.note}</span>
+            </div>
+            {r.prices.map((p, i) => (
+              <div class={`td price ${i === 1 ? 'hl' : ''} ${p ? '' : 'empty'}`} role="cell" data-tier={d.tiers[i].name}>
+                {p}
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="after reveal">
+      <p class="muted">{d.footnote}</p>
+      <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
+        {d.cta} <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wrap {
+    display: grid;
+    gap: 24px;
+  }
+  .table {
+    margin-top: 40px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgba(17, 20, 27, 0.5);
+  }
+  .tr {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .tr:last-child {
+    border-bottom: 0;
+  }
+  .th,
+  .td {
+    padding: 22px 24px;
+  }
+  .tier,
+  .svc {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+  }
+  .tier strong {
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .tier span,
+  .svc span {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .svc strong {
+    font-weight: 500;
+  }
+  .price {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+  .hl {
+    background: rgba(91, 140, 255, 0.07);
+    box-shadow: inset 1px 0 0 rgba(91, 140, 255, 0.25), inset -1px 0 0 rgba(91, 140, 255, 0.25);
+  }
+  .thead .hl strong::after {
+    content: ' ●';
+    color: var(--accent);
+    font-size: 12px;
+    vertical-align: middle;
+  }
+  .after {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 12px;
+  }
+  .after p {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 14px;
+  }
+  @media (max-width: 860px) {
+    .thead {
+      display: none;
+    }
+    .tr {
+      grid-template-columns: 1fr;
+      padding: 8px 0;
+    }
+    .th,
+    .td {
+      padding: 10px 20px;
+    }
+    .price.empty {
+      display: none;
+    }
+    .price::before {
+      content: attr(data-tier);
+      font-family: var(--font-sans);
+      color: var(--muted);
+      width: 96px;
+      flex-shrink: 0;
+    }
+    .hl {
+      box-shadow: none;
+    }
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+import type { Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).thesis;
+---
+
+<section class="section thesis">
+  <div class="wrap">
+    <p class="kicker reveal">{d.kicker}</p>
+    <h2 class="h-lg statement reveal" style="--d:.1s">
+      {d.line} <span class="serif grad">{d.accent}</span>
+    </h2>
+    <p class="lead reveal" style="--d:.2s">{d.body}</p>
+  </div>
+</section>
+
+<style>
+  .thesis .wrap {
+    display: grid;
+    gap: 32px;
+  }
+  .statement {
+    max-width: 18ch;
+  }
+</style>

@@ -1,0 +1,130 @@
+---
+import { site, type Lang } from '../config/site';
+import { heroClip } from '../config/media';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang).hero;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-media" aria-hidden="true">
+    <video class="vid" src={heroClip.src} autoplay muted loop playsinline preload="auto"></video>
+    <div class="shade"></div>
+  </div>
+
+  <div class="wrap hero-inner in" data-hero>
+    <p class="kicker reveal">{d.eyebrow}</p>
+    <h1 id="hero-title" class="h-xl hero-title">
+      {
+        d.title.map((word, i) => (
+          <span class="split-line" style={`--d:${0.15 + i * 0.12}s`}>
+            <span class={i === 1 ? 'serif latin grad' : ''}>{word}</span>
+          </span>
+        ))
+      }
+    </h1>
+    <p class="lead reveal" style="--d:.6s">{d.sub}</p>
+    <div class="ctas reveal" style="--d:.75s">
+      <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
+        {d.primary} <span class="arrow">→</span>
+      </a>
+      <a class="btn btn-ghost" href="#work">{d.secondary}</a>
+    </div>
+  </div>
+
+  <div class="wrap hero-bar">
+    <span class="scroll"><span class="line"></span>{d.scroll}</span>
+    <span class="clock" data-clock>Taipei —:—:—</span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 104px 0 0;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 70% 40%, #12204a 0%, var(--bg) 60%);
+  }
+  .hero-media video {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+  .shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(5, 6, 8, 0.92) 0%, rgba(5, 6, 8, 0.55) 45%, rgba(5, 6, 8, 0.1) 100%),
+      linear-gradient(0deg, var(--bg) 0%, rgba(5, 6, 8, 0) 40%);
+  }
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 44px;
+  }
+  .hero-title {
+    font-size: clamp(60px, min(13vw, 16.5vh), 200px);
+  }
+  .hero-title .serif {
+    padding-right: 0.06em;
+  }
+  .ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hero-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 28px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--fg);
+    animation: sweep 2.2s var(--ease) infinite;
+  }
+  @keyframes sweep {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+</style>

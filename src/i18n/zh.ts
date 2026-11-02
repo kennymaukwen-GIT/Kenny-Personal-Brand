@@ -1,0 +1,176 @@
+import type { Dict } from './en';
+
+export const zh: Dict = {
+  meta: {
+    title: '中小企業的 AI 工作室 — Seen. Found. Used.',
+    description:
+      '一人 AI 創意科技工作室：AI 影片與視覺、會被 AI 搜尋推薦的網站，以及 App 和客製軟體。服務新創、中小企業與個人品牌。',
+  },
+  nav: {
+    work: '作品',
+    services: '服務',
+    caseStudy: '案例',
+    building: '正在打造',
+    cta: '預約通話',
+    langLabel: 'EN',
+  },
+  hero: {
+    eyebrow: 'AI 原生創意科技工作室',
+    title: ['Seen.', 'Found.', 'Used.'],
+    sub: '大企業擁有的 AI 基礎建設，我們為中小企業重新打造。讓你的品牌讓人停下滑動、成為 AI 搜尋推薦的答案，也成為客戶離不開的工具。',
+    primary: '預約 30 分鐘診斷',
+    secondary: '看作品',
+    scroll: '往下',
+  },
+  marquee: ['網站設計', 'UI / UX', '動態設計', 'AI 影片', 'AI 廣告', 'AI 視覺', 'AI SEO', 'App 設計', '客製軟體'],
+  thesis: {
+    kicker: '為什麼有這間工作室',
+    line: '大企業有整個團隊讓 AI 為他們工作。',
+    accent: '你有我們。',
+    body: '一間工作室，取代網站公司、影片團隊和 SEO 公司。因為 AI 負責大量產出，而每一格畫面都由人來把關。',
+  },
+  pillars: {
+    kicker: '我們做什麼',
+    items: [
+      {
+        key: 'seen',
+        label: '01 — Seen 被看見',
+        title: '讓人無法滑過去。',
+        body: '由工作室親自導演的電影感 AI 影片、廣告與視覺。不用圖庫素材，也不套公版。',
+        list: ['AI 影片與廣告', 'AI 圖像與主視覺', '動態設計', '品牌視覺系統'],
+      },
+      {
+        key: 'found',
+        label: '02 — Found 被找到',
+        title: '成為 AI 給出的答案。',
+        body: '網站從結構開始設計，讓 ChatGPT、Perplexity、Gemini 和 Google 看懂你，進而推薦你。',
+        list: ['網站設計與建置', 'AI SEO / GEO', '內容架構', '結構化資料與成效追蹤'],
+      },
+      {
+        key: 'used',
+        label: '03 — Used 被使用',
+        title: '成為大家離不開的工具。',
+        body: '讓生意運作更順的介面與軟體，從 App 到內部系統。',
+        list: ['UI / UX 設計', 'App 設計', '客製軟體與工具', '內部系統'],
+      },
+    ],
+  },
+  caseFeature: {
+    kicker: '案例 · 新竹外匯進口與二手車商',
+    title: '從只靠臉書，到 AI 帶來源源不絕的收車管道。',
+    body: '架設網站之前，客人全部來自臉書和口碑。我們設計了網站結構與內容，讓 AI 搜尋能理解這家車行。現在有人透過 AI 找上門，而且多數是想賣車的車主，正好是二手車商最需要的車源。',
+    stats: [
+      { value: 'Top 5', label: 'AI 搜尋推薦的平均排名' },
+      { value: '10–15%', label: 'Google 搜尋點擊率' },
+      { value: '50–70%', label: '點進來的訪客成為客戶' },
+    ],
+    thesis: '我們不追流量，我們追意圖。',
+    note: '數據來源：Google Search Console 與車行自身紀錄。',
+    cta: '閱讀完整案例',
+  },
+  work: {
+    kicker: '作品',
+    title: '每一格畫面都由我們導演，用 AI 生成。',
+    sub: '科幻、超現實、商業廣告、時尚、東方藝術。滑鼠移上去即可播放。',
+  },
+  pricing: {
+    kicker: '服務與價格',
+    title: '選擇你要的精細度。',
+    sub: 'AI 負責大量產出，你付費買的是人的導演與判斷，由你決定要多少。',
+    tiers: [
+      { name: 'Draft', body: 'AI 主導、快速交付。適合測試想法、需要大量產出時。' },
+      { name: 'Studio', body: 'AI 產出加上人工精修。產品上線時的預設選擇。' },
+      { name: 'Signature', body: '完整美術指導、客製動態，不妥協。' },
+    ],
+    rows: [
+      { service: '網站：純設計', note: '客製 AI 視覺，預設就是 AI 讀得懂的結構', prices: ['£300 起', '£600 起', '£1,500 起'] },
+      { service: '網站＋AI SEO 基礎', note: '內容架構、結構化資料、Search Console、AI 能見度報告', prices: ['—', '£1,200 起', '£3,000 起'] },
+      { service: 'AI SEO 月費', note: '每月監測、內容與能見度追蹤', prices: ['£300／月起', '£600／月起', '£1,000／月起'] },
+      { service: 'AI 影片與廣告', note: '每支完成的影片', prices: ['£50 起', '£150 起', '£800 起'] },
+      { service: 'App 與客製軟體', note: '先進行付費需求診斷（£300 起）再報價', prices: ['', '另行報價', ''] },
+    ],
+    footnote: '以上為起價，正式報價在 30 分鐘免費通話後提供。AI SEO 每個城市每個產業只服務一家。',
+    cta: '索取報價',
+  },
+  process: {
+    kicker: '工作方式',
+    title: '人的判斷，AI 的速度。',
+    steps: [
+      { n: '01', title: '診斷', body: '先檢查人和 AI 現在怎麼看你的品牌。' },
+      { n: '02', title: '導演', body: '生成任何東西之前，先定好清楚的創意與結構規劃。' },
+      { n: '03', title: '生成', body: 'AI 大量產出，原本要幾週的製作縮短成幾天。' },
+      { n: '04', title: '精修與上線', body: '人工逐格、逐行修整，上線後持續追蹤成效。' },
+    ],
+  },
+  building: {
+    kicker: '正在打造',
+    title: 'Smart Schedule',
+    body: '我們自己的產品：一款橫跨 Google 日曆和 iOS 的 AI 排程工具，支援中英文。公開開發，由幫你打造產品的同一個工作室製作。',
+    status: '即將上線',
+    cta: '追蹤開發進度',
+  },
+  final: {
+    title: ['讓你成為', '那個答案。'],
+    sub: '預約 30 分鐘免費診斷。無論最後是否合作，你都會清楚知道 AI 怎麼看你的品牌。',
+    primary: '預約通話',
+    newsletterTitle: 'Build Log',
+    newsletterBody: '每月一封：經營 AI 工作室、公開打造 App 的過程紀錄。',
+    newsletterPlaceholder: 'you@company.com',
+    newsletterButton: '訂閱',
+  },
+  footer: {
+    built: '本網站以 AI 原生流程設計與建置。',
+    privacy: '隱私權',
+    rights: '版權所有。',
+  },
+  caseStudy: {
+    metaTitle: '案例：外匯進口與二手車商的 AI SEO',
+    metaDescription: '新竹一家外匯進口與二手車商，如何從只靠臉書，變成被 AI 搜尋推薦，搜尋來的訪客有 50–70% 成為客戶。',
+    back: '回首頁',
+    kicker: '案例 · AI SEO',
+    title: '從只靠臉書，到 AI 帶來源源不絕的收車管道。',
+    client: '外匯進口與二手車商｜台灣新竹',
+    services: '網站結構設計 · 內容設計 · AI SEO',
+    sections: [
+      {
+        h: '背景',
+        p: '這家車行在新竹做外匯車進口和國內二手車買賣，客人全部來自臉書和口碑。沒有網站，所以當有人問 Google 或 ChatGPT「新竹哪裡可以賣車、買車」時，這家車行等於不存在。',
+      },
+      {
+        h: '挑戰',
+        p: '買車、賣車都是高單價、會大量比較的決定，客人在打電話之前就已經做足功課。而對二手車商來說，真正的瓶頸是車源：找到想賣車的車主。',
+      },
+      {
+        h: '我們做了什麼',
+        p: '我們從零開始，為 AI 搜尋設計網站結構與內容：清楚的品牌主體、清楚的服務、清楚的地點，回答大家真正會問的問題。目標不是流量，而是當對的人發問時，成為那個答案。',
+      },
+    ],
+    funnelTitle: '每個月的轉換漏斗',
+    funnel: [
+      { value: '~100', label: '搜尋曝光' },
+      { value: '10–15%', label: '點擊率' },
+      { value: '50–70%', label: '訪客成為客戶' },
+    ],
+    funnelNote: '多數是來把車賣給車行的車主，也就是車商最難找的新車源。',
+    aiTitle: '被 AI 推薦',
+    aiBody: '在多個 AI 助理的追蹤問題中，這家車行平均出現在前五名。你可以直接問 ChatGPT 新竹的外匯車或賣車問題，親自驗證。',
+    takeaway: '流量小，意圖高。一百個對的人，勝過十萬個路人。',
+    note: '數據來源：Google Search Console 與車行自身紀錄。應客戶要求不公開名稱。',
+    ctaTitle: '想在你的城市成為那個答案嗎？',
+    cta: '預約 30 分鐘診斷',
+  },
+  privacy: {
+    title: '隱私權政策',
+    updated: '最後更新：2026 年 11 月',
+    body: [
+      '本網站不使用廣告追蹤工具。我們可能使用不需 Cookie、重視隱私的分析工具來統計造訪次數。',
+      '如果你訂閱 Build Log 或與我們聯絡，你的 Email 只會用於回覆，以及寄送你要求的內容。你可以隨時取消訂閱。',
+      '我們絕不販售你的資料。如有任何問題或刪除資料的需求，請來信聯絡。',
+    ],
+  },
+  notFound: {
+    title: '找不到頁面。',
+    body: '這個頁面飄進虛空裡了。',
+    cta: '回首頁',
+  },
+};

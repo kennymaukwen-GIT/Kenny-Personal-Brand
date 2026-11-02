@@ -1,0 +1,115 @@
+---
+import { site, type Lang } from '../config/site';
+import { clips } from '../config/media';
+import { t } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).final;
+// Without a newsletter service yet, the form falls back to opening an email.
+const action = site.newsletterAction || `mailto:${site.email}?subject=Build%20Log`;
+const method = site.newsletterAction ? 'post' : 'get';
+---
+
+<section class="section final">
+  <div class="bg" aria-hidden="true">
+    <LazyVideo src={clips.monolith.src} />
+    <div class="bg-shade"></div>
+  </div>
+  <div class="wrap">
+    <h2 class="h-xl">
+      <span class="split-line"><span>{d.title[0]}</span></span>
+      <span class="split-line" style="--d:.12s"><span class="serif grad">{d.title[1]}</span></span>
+    </h2>
+    <p class="lead reveal" style="--d:.2s">{d.sub}</p>
+    <a class="btn btn-primary big reveal" style="--d:.3s" href={site.bookingUrl} target="_blank" rel="noopener">
+      {d.primary} <span class="arrow">→</span>
+    </a>
+
+    <form class="news reveal" id="buildlog" action={action} method={method}>
+      <div>
+        <strong>{d.newsletterTitle}</strong>
+        <span class="muted">{d.newsletterBody}</span>
+      </div>
+      <div class="field">
+        <label class="sr-only" for="email">Email</label>
+        <input id="email" name="email" type="email" required placeholder={d.newsletterPlaceholder} autocomplete="email" />
+        <button class="btn btn-ghost" type="submit">{d.newsletterButton}</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .final {
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: clamp(120px, 16vw, 220px);
+  }
+  .bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.55;
+  }
+  .bg-shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, var(--bg) 0%, rgba(5, 6, 8, 0.4) 35%, rgba(5, 6, 8, 0.85) 100%),
+      linear-gradient(90deg, rgba(5, 6, 8, 0.8), transparent 70%);
+  }
+  .wrap {
+    display: grid;
+    gap: 32px;
+    justify-items: start;
+  }
+  .big {
+    height: 60px;
+    padding: 0 30px;
+    font-size: 17px;
+  }
+  .news {
+    margin-top: 48px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgba(11, 13, 18, 0.7);
+    backdrop-filter: blur(12px);
+  }
+  .news > div:first-child {
+    display: grid;
+    gap: 4px;
+  }
+  .news .muted {
+    font-size: 15px;
+  }
+  .field {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    max-width: 460px;
+    min-width: 260px;
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 52px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+</style>

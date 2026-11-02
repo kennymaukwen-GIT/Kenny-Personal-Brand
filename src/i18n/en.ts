@@ -1,0 +1,187 @@
+export const en = {
+  meta: {
+    title: 'AI Studio for Small Business — Seen. Found. Used.',
+    description:
+      'A one-person AI-native creative tech studio. AI film and visuals, websites built to be recommended by AI search, and apps and custom software — for startups, small businesses and personal brands.',
+  },
+  nav: {
+    work: 'Work',
+    services: 'Services',
+    caseStudy: 'Case study',
+    building: 'Now building',
+    cta: 'Book a call',
+    langLabel: '中文',
+  },
+  hero: {
+    eyebrow: 'AI-native creative tech studio',
+    title: ['Seen.', 'Found.', 'Used.'],
+    sub: 'The AI infrastructure big companies have — rebuilt for small businesses. We make your brand impossible to scroll past, the answer AI search recommends, and the tool your customers keep.',
+    primary: 'Book a 30-min diagnosis',
+    secondary: 'See the reel',
+    scroll: 'Scroll',
+  },
+  marquee: [
+    'Web Design',
+    'UI / UX',
+    'Motion',
+    'AI Film',
+    'AI Ads',
+    'AI Imagery',
+    'AI SEO',
+    'App Design',
+    'Custom Software',
+  ],
+  thesis: {
+    kicker: 'Why this studio exists',
+    line: 'Giants have whole teams making AI work for them.',
+    accent: 'You have us.',
+    body: 'One studio replaces the web agency, the video crew and the SEO firm — because AI does the heavy lifting and a human directs every frame.',
+  },
+  pillars: {
+    kicker: 'What we do',
+    items: [
+      {
+        key: 'seen',
+        label: '01 — Seen',
+        title: 'Be impossible to scroll past.',
+        body: 'Cinematic AI film, ads and visuals directed in-house. No stock footage, no generic templates.',
+        list: ['AI film & video ads', 'AI imagery & key visuals', 'Motion design', 'Brand visual systems'],
+      },
+      {
+        key: 'found',
+        label: '02 — Found',
+        title: 'Be the answer AI gives.',
+        body: 'Websites structured so ChatGPT, Perplexity, Gemini and Google can understand you — and recommend you.',
+        list: ['Website design & build', 'AI SEO / GEO', 'Content architecture', 'Structured data & tracking'],
+      },
+      {
+        key: 'used',
+        label: '03 — Used',
+        title: 'Be the tool people keep.',
+        body: 'Interfaces and software that make your business run smoother — from apps to internal systems.',
+        list: ['UI / UX design', 'App design', 'Custom software & tools', 'Internal systems'],
+      },
+    ],
+  },
+  caseFeature: {
+    kicker: 'Case study · Import & used-car dealer, Hsinchu',
+    title: 'From Facebook-only to an inbound car-sourcing engine.',
+    body: 'Before the website, every customer came from Facebook or word of mouth. We designed the site structure and content so AI search could understand the business. Now people find the dealer through AI — mostly owners looking to sell their car, which is exactly the stock a used-car dealer needs.',
+    stats: [
+      { value: 'Top 5', label: 'Average position in AI-search recommendations' },
+      { value: '10–15%', label: 'Click-through from Google search' },
+      { value: '50–70%', label: 'Of those visitors become customers' },
+    ],
+    thesis: "We don't chase traffic. We chase intent.",
+    note: 'Measured with Google Search Console and the dealer’s own records.',
+    cta: 'Read the case study',
+  },
+  work: {
+    kicker: 'Reel',
+    title: 'Every frame directed here. Generated with AI.',
+    sub: 'Sci-fi, surreal, commercial, fashion, Eastern art. Hover to play.',
+  },
+  pricing: {
+    kicker: 'Services & pricing',
+    title: 'Choose your level of craft.',
+    sub: 'AI does the heavy lifting. What you pay for is human direction — pick how much of it you want.',
+    tiers: [
+      { name: 'Draft', body: 'AI-led, fast turnaround. Great for testing ideas and volume.' },
+      { name: 'Studio', body: 'AI output refined by hand. Our default for launches.' },
+      { name: 'Signature', body: 'Fully art-directed, custom motion, no compromises.' },
+    ],
+    rows: [
+      { service: 'Website — design only', note: 'Custom AI visuals, AI-readable structure by default', prices: ['from £300', 'from £600', 'from £1,500'] },
+      { service: 'Website + AI SEO foundation', note: 'Content architecture, structured data, Search Console, AI visibility report', prices: ['—', 'from £1,200', 'from £3,000'] },
+      { service: 'AI SEO care', note: 'Monthly monitoring, content and visibility tracking', prices: ['from £300/mo', 'from £600/mo', 'from £1,000/mo'] },
+      { service: 'AI film & ads', note: 'Per finished video', prices: ['from £50', 'from £150', 'from £800'] },
+      { service: 'Apps & custom software', note: 'Scoped after a paid discovery sprint (from £300)', prices: ['', 'Quote', ''] },
+    ],
+    footnote: 'Starting prices. Final quote after a free 30-minute call. One client per industry per city for AI SEO.',
+    cta: 'Get a quote',
+  },
+  process: {
+    kicker: 'How we work',
+    title: 'Human judgment. AI speed.',
+    steps: [
+      { n: '01', title: 'Diagnose', body: 'We check how people — and AI — see your brand today.' },
+      { n: '02', title: 'Direct', body: 'A clear creative and structural plan before anything is generated.' },
+      { n: '03', title: 'Generate', body: 'AI produces at volume. Weeks of production become days.' },
+      { n: '04', title: 'Refine & ship', body: 'A human edits every frame and line, then we launch and measure.' },
+    ],
+  },
+  building: {
+    kicker: 'Now building',
+    title: 'Smart Schedule',
+    body: 'Our own product: an AI scheduler that works across Google Calendar and iOS, in English and Chinese. Built in public, by the same studio that builds for you.',
+    status: 'Launching soon',
+    cta: 'Follow the build',
+  },
+  final: {
+    title: ['Let’s make you', 'the answer.'],
+    sub: 'Book a free 30-minute diagnosis. You’ll leave with a clear view of how AI sees your brand — whether or not we work together.',
+    primary: 'Book a call',
+    newsletterTitle: 'Build Log',
+    newsletterBody: 'Monthly notes on running an AI studio and building an app in public.',
+    newsletterPlaceholder: 'you@company.com',
+    newsletterButton: 'Subscribe',
+  },
+  footer: {
+    built: 'Designed and built with an AI-native workflow.',
+    privacy: 'Privacy',
+    rights: 'All rights reserved.',
+  },
+  caseStudy: {
+    metaTitle: 'Case study: AI SEO for an import & used-car dealer',
+    metaDescription:
+      'How a Hsinchu import and used-car dealer went from Facebook-only to being recommended by AI search — with 50–70% of search visitors becoming customers.',
+    back: 'Back to home',
+    kicker: 'Case study · AI SEO',
+    title: 'From Facebook-only to an inbound car-sourcing engine.',
+    client: 'Import & used-car dealer, Hsinchu, Taiwan',
+    services: 'Website structure design · Content design · AI SEO',
+    sections: [
+      {
+        h: 'Context',
+        p: 'The dealer imports cars and trades used cars in Hsinchu. Every customer came through Facebook or word of mouth. There was no website — so when someone asked Google or ChatGPT where to sell or buy a car in Hsinchu, the business simply did not exist.',
+      },
+      {
+        h: 'The challenge',
+        p: 'Cars are a high-value, high-research purchase. Buyers and sellers compare options before they ever make a call. For a used-car dealer the real bottleneck is stock — finding owners who want to sell.',
+      },
+      {
+        h: 'What we did',
+        p: 'We designed the site structure and content from the ground up for AI search: clear entities, clear services, clear location, answers to the questions people actually ask. The goal was not traffic. It was to be the answer when the right person asks.',
+      },
+    ],
+    funnelTitle: 'The funnel, every month',
+    funnel: [
+      { value: '~100', label: 'Search impressions' },
+      { value: '10–15%', label: 'Click through' },
+      { value: '50–70%', label: 'Of visitors become customers' },
+    ],
+    funnelNote: 'Most are owners selling their car to the dealer — new stock, the hardest thing for a dealer to find.',
+    aiTitle: 'Recommended by AI',
+    aiBody: 'In tracked prompts across AI assistants, the dealer appears in the top five on average. Ask ChatGPT about importing or selling a car in Hsinchu and see for yourself.',
+    takeaway: 'Small traffic, high intent. A hundred of the right people beat a hundred thousand passers-by.',
+    note: 'Figures from Google Search Console and the dealer’s own records. Client name withheld at their request.',
+    ctaTitle: 'Want to be the answer in your city?',
+    cta: 'Book a 30-min diagnosis',
+  },
+  privacy: {
+    title: 'Privacy',
+    updated: 'Last updated: November 2026',
+    body: [
+      'This website does not use advertising trackers. We may use privacy-friendly, cookie-less analytics to count visits.',
+      'If you subscribe to the Build Log or contact us, we use your email only to reply and to send what you asked for. You can unsubscribe at any time.',
+      'We never sell your data. For any question or deletion request, email us.',
+    ],
+  },
+  notFound: {
+    title: 'Not found.',
+    body: 'This page drifted off into the void.',
+    cta: 'Back home',
+  },
+};
+
+export type Dict = typeof en;
