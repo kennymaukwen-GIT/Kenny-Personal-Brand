@@ -1,10 +1,11 @@
 import type { APIRoute } from 'astro';
 import { site } from '../config/site';
 import { en } from '../i18n/en';
+import { withBase } from '../i18n';
 
 // A plain-language summary for AI assistants (llms.txt convention).
 export const GET: APIRoute = () => {
-  const url = (p: string) => new URL(p, site.url).href;
+  const url = (p: string) => new URL(withBase(p), site.url).href;
   const body = `# ${site.name}
 
 > ${en.meta.description}

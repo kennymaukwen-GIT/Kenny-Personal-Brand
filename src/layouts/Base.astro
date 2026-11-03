@@ -4,7 +4,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Announce from '../components/Announce.astro';
 import { site, type Lang } from '../config/site';
-import { t, localePath } from '../i18n';
+import { t, localePath, withBase } from '../i18n';
 
 interface Props {
   lang: Lang;
@@ -77,8 +77,8 @@ const allLd = [orgLd, ...jsonLd];
     <link rel="alternate" hreflang="zh-Hant-TW" href={zhUrl} />
     <link rel="alternate" hreflang="x-default" href={enUrl} />
     <meta name="theme-color" content="#ffffff" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />

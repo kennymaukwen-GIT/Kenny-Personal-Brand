@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { t } from '../i18n';
+import { t, localePath } from '../i18n';
 
 const d = t('en').notFound;
 ---
@@ -12,7 +12,7 @@ const d = t('en').notFound;
       <p class="kicker">404</p>
       <h1 class="h-xl">{d.title}</h1>
       <p class="lead">{d.body}</p>
-      <a class="btn btn-primary" href="/">{d.cta} <span class="arrow">→</span></a>
+      <a class="btn btn-primary" href={localePath('en', '/')}>{d.cta} <span class="arrow">→</span></a>
     </div>
   </section>
 </Base>

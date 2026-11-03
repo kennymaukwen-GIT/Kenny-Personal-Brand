@@ -7,7 +7,7 @@ export const site = {
   shortName: 'Kairo',
   founder: 'Kenny',
   // TODO: replace with the real domain once it is bought.
-  url: 'https://kairo.studio',
+  url: (import.meta.env?.SITE as string | undefined) || 'https://kairo.studio',
   tagline: 'An AI studio that builds anything.',
   // TODO: real booking link (Cal.com now, Smart Schedule later).
   bookingUrl: 'https://cal.com/',
