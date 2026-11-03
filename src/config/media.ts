@@ -94,7 +94,7 @@ export const clips = {
   ),
 } satisfies Record<string, Clip>;
 
-export const heroClip = clips.convergence;
+export const heroClip = clips.chrome;
 
 // Order shown in the portfolio reel.
 export const reel: Clip[] = [

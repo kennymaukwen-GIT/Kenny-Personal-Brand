@@ -22,7 +22,7 @@ const boxes = [
 ];
 ---
 
-<section class="hero sheet" aria-labelledby="hero-title">
+<section class="hero sheet" data-zoom aria-labelledby="hero-title">
   <video class="vid" src={heroClip.src} autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
   <div class="shade" aria-hidden="true"></div>
   <div class="boxes" aria-hidden="true">
@@ -36,7 +36,7 @@ const boxes = [
       ))
     }
   </div>
-  <div class="copy">
+  <div class="copy" data-zoom-copy>
     <SplitText tag="h1" id="hero-title" class="h-xl" text={h.title.join(' ')} delay={0.2} />
     <p class="sub reveal" style="--d:.6s">{h.sub}</p>
     <div class="ctas reveal" style="--d:.75s">
@@ -49,6 +49,8 @@ const boxes = [
 
 <style>
   .hero {
+    transform-origin: 50% 0;
+    will-change: transform;
     height: calc(100svh - 60px - 32px - 16px);
     min-height: 560px;
     color: #fff;

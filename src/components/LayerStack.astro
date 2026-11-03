@@ -1,0 +1,331 @@
+---
+// Exploded 3D stack of glass layers (film → design → web → software → AI).
+// Scrolling pulls the layers apart and labels each one.
+import type { Lang } from '../config/site';
+import { clips } from '../config/media';
+import { t } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).layers;
+// Back to front: AI, software, web, design, film.
+const order = [4, 3, 2, 1, 0];
+---
+
+<section class="layers sheet dark" data-layers>
+  <div class="stage">
+    <div class="copy">
+      <p class="kicker">{d.kicker}</p>
+      <h2 class="h-lg">{d.title}</h2>
+      <p class="lead">{d.body}</p>
+      <ol class="legend">
+        {
+          d.items.map((it, i) => (
+            <li data-layer-legend={i}>
+              <span class="n">0{i + 1}</span>
+              <span>
+                <strong>{it.name}</strong>
+                <em>{it.desc}</em>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="scene" aria-hidden="true">
+      <div class="stack" data-layer-stack>
+        {
+          order.map((k, z) => (
+            <div class={`layer l${k}`} style={`--i:${z}`}>
+              <span class="lbl">
+                0{k + 1} · {d.items[k].name}
+              </span>
+              {k === 0 && (
+                <div class="fill">
+                  <LazyVideo src={clips.skywhale.src} />
+                </div>
+              )}
+              {k === 1 && (
+                <svg viewBox="0 0 400 280" class="fill">
+                  {Array.from({ length: 11 }, (_, i) => (
+                    <line x1={i * 40} y1="0" x2={i * 40} y2="280" />
+                  ))}
+                  {Array.from({ length: 8 }, (_, i) => (
+                    <line x1="0" y1={i * 40} x2="400" y2={i * 40} />
+                  ))}
+                  <circle cx="200" cy="140" r="90" class="hi" />
+                  <rect x="80" y="60" width="240" height="160" class="hi" />
+                  <line x1="0" y1="0" x2="400" y2="280" class="hi" />
+                </svg>
+              )}
+              {k === 2 && (
+                <div class="fill page">
+                  <i class="bar" />
+                  <i class="h" />
+                  <i class="t" />
+                  <i class="t s" />
+                  <div class="row">
+                    <i class="blk" />
+                    <i class="blk" />
+                    <i class="blk" />
+                  </div>
+                </div>
+              )}
+              {k === 3 && (
+                <pre class="fill code">{`const studio = await kairo.build({
+  website: { ai_seo: true },
+  app: ['ios', 'android'],
+  tools: ['dashboard', 'crm'],
+});
+// ✓ shipped`}</pre>
+              )}
+              {k === 4 && (
+                <svg viewBox="0 0 400 280" class="fill">
+                  {[
+                    [60, 60, 200, 140],
+                    [60, 220, 200, 140],
+                    [200, 140, 340, 70],
+                    [200, 140, 340, 210],
+                    [60, 60, 60, 220],
+                    [340, 70, 340, 210],
+                  ].map(([a, b, c, e]) => (
+                    <line x1={a} y1={b} x2={c} y2={e} class="hi" />
+                  ))}
+                  {[
+                    [60, 60],
+                    [60, 220],
+                    [200, 140],
+                    [340, 70],
+                    [340, 210],
+                  ].map(([x, y]) => (
+                    <circle cx={x} cy={y} r="9" class="node" />
+                  ))}
+                </svg>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .layers {
+    height: 320vh;
+    overflow: visible;
+  }
+  .stage {
+    position: sticky;
+    top: 8px;
+    height: calc(100svh - 16px);
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: radial-gradient(70% 60% at 70% 50%, #121218, #000);
+    display: grid;
+    grid-template-columns: minmax(300px, 0.8fr) 1.2fr;
+    align-items: center;
+    gap: 24px;
+    padding: 0 clamp(24px, 4vw, 64px);
+  }
+  .copy {
+    display: grid;
+    gap: 18px;
+    z-index: 2;
+  }
+  .legend {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+    border-top: 1px solid var(--line);
+  }
+  .legend li {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    color: #666;
+    transition: color 0.4s;
+  }
+  .legend li.on {
+    color: #fff;
+  }
+  .legend .n {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding-top: 3px;
+  }
+  .legend strong {
+    display: block;
+    font-weight: 400;
+  }
+  .legend em {
+    font-style: normal;
+    font-size: 13px;
+    color: #7a7a7a;
+  }
+  .scene {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    perspective: 1800px;
+  }
+  .stack {
+    position: relative;
+    width: min(440px, 80%);
+    aspect-ratio: 400 / 280;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(22deg + var(--ty, 0) * 1deg)) rotateY(calc(-32deg + var(--tx, 0) * 1deg)) rotateZ(3deg) scale(0.86);
+    transition: transform 0.6s var(--ease);
+  }
+  .layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.4) inset,
+      0 30px 60px -30px rgba(0, 0, 0, 0.9);
+    transform: translate3d(
+      calc((var(--i) - 2) * (8px + var(--p, 0) * 58px)),
+      calc((var(--i) - 2) * (-4px - var(--p, 0) * 46px)),
+      calc((var(--i) - 2) * (14px + var(--p, 0) * 80px))
+    );
+    transition: border-color 0.4s;
+    overflow: hidden;
+  }
+  .l0 {
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+  .fill {
+    position: absolute;
+    inset: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .l0 .fill {
+    background: #222;
+    opacity: 0.92;
+  }
+  svg line {
+    stroke: rgba(255, 255, 255, 0.14);
+    stroke-width: 1;
+  }
+  svg .hi {
+    stroke: rgba(255, 255, 255, 0.7);
+    fill: none;
+    stroke-width: 1.2;
+  }
+  svg .node {
+    fill: #000;
+    stroke: #fff;
+    stroke-width: 1.5;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  svg .node:nth-child(odd) {
+    animation-delay: 1.2s;
+  }
+  @keyframes pulse {
+    50% {
+      fill: #fff;
+    }
+  }
+  .page {
+    padding: 14px;
+    display: grid;
+    align-content: start;
+    gap: 8px;
+  }
+  .page i {
+    display: block;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .page .bar {
+    height: 8px;
+    width: 100%;
+  }
+  .page .h {
+    height: 18px;
+    width: 60%;
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+  .page .t {
+    height: 6px;
+    width: 80%;
+  }
+  .page .s {
+    width: 55%;
+  }
+  .page .row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .page .blk {
+    height: 70px;
+  }
+  .code {
+    margin: 0;
+    padding: 16px;
+    font: 12px/1.7 var(--font-mono);
+    color: #9fe6b8;
+    white-space: pre;
+  }
+  .lbl {
+    position: absolute;
+    left: 10px;
+    top: -26px;
+    z-index: 3;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #fff;
+    background: #000;
+    padding: 2px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    opacity: clamp(0, calc(var(--p, 0) * 3 - 0.6), 1);
+    white-space: nowrap;
+  }
+  .layer {
+    overflow: visible;
+  }
+  @media (max-width: 900px) {
+    .layers {
+      height: 260vh;
+    }
+    .stage {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      padding-top: 48px;
+    }
+    .legend {
+      display: none;
+    }
+    .stack {
+      width: 70%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .layers {
+      height: auto;
+    }
+    .stage {
+      position: relative;
+      min-height: 90svh;
+    }
+    .stack {
+      --p: 0.6;
+    }
+  }
+</style>

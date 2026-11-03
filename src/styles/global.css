@@ -107,6 +107,8 @@ input {
 .sheet.sticky {
   position: sticky;
   top: 8px;
+  transform-origin: 50% 0;
+  will-change: transform, filter;
 }
 .mono,
 .kicker {

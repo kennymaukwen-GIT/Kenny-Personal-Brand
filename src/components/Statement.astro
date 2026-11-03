@@ -12,7 +12,7 @@ const cjk = /[㐀-鿿]/.test(text);
 const parts = cjk ? (text.match(/[A-Za-z0-9.%–\-+/]+|\s+|./gu) ?? [text]) : text.split(/(\s+)/);
 ---
 
-<section class="statement sheet" data-highlight>
+<section class="statement sheet sticky" data-highlight data-stack>
   <div class="inner">
     <p class="h-lg words">
       {parts.map((p) => (/^\s+$/.test(p) ? ' ' : <span class="hw">{p}</span>))}

@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import Film from '../components/Film.astro';
 import Statement from '../components/Statement.astro';
 import Rotator from '../components/Rotator.astro';
+import LayerStack from '../components/LayerStack.astro';
 import Carousel from '../components/Carousel.astro';
 import Capabilities from '../components/Capabilities.astro';
 import CaseFeature from '../components/CaseFeature.astro';
@@ -45,9 +46,14 @@ const faq = {
 <Base lang={lang} path="/" jsonLd={[faq]} announce>
   <Hero lang={lang} />
   <Film lang={lang} />
-  <Statement lang={lang} />
-  <Rotator lang={lang} />
-  <Carousel lang={lang} />
+  <div class="pair">
+    <Statement lang={lang} />
+    <LayerStack lang={lang} />
+  </div>
+  <div class="pair">
+    <Rotator lang={lang} />
+    <Carousel lang={lang} />
+  </div>
   <div class="sheet white">
     <Capabilities lang={lang} />
     <CaseFeature lang={lang} />
@@ -61,6 +67,13 @@ const faq = {
 </Base>
 
 <style>
+  .pair {
+    position: relative;
+  }
+  .pair > :global(*:last-child) {
+    position: relative;
+    z-index: 2;
+  }
   .white {
     background: #fff;
     box-shadow: 0 0 0 1px var(--line);

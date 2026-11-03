@@ -366,6 +366,60 @@ function updateTiles() {
 }
 
 /* ------------------------------------------------------------------ */
+/* Hero recedes as you scroll; stacked sheets shrink and dim when       */
+/* the next one slides over them                                        */
+/* ------------------------------------------------------------------ */
+const zoom = document.querySelector<HTMLElement>('[data-zoom]');
+const zoomCopy = zoom?.querySelector<HTMLElement>('[data-zoom-copy]');
+const zoomVid = zoom?.querySelector<HTMLElement>(':scope > video');
+function updateZoom() {
+  if (!zoom || reduceMotion) return;
+  const p = clamp(window.scrollY / (zoom.offsetHeight || 1));
+  zoom.style.transform = `scale(${1 - p * 0.08})`;
+  zoom.style.borderRadius = `${12 + p * 28}px`;
+  if (zoomVid) zoomVid.style.transform = `scale(${1.12 - p * 0.12}) translateY(${p * 40}px)`;
+  if (zoomCopy) {
+    zoomCopy.style.transform = `translateY(${-p * 140}px)`;
+    zoomCopy.style.opacity = String(1 - p * 1.4);
+  }
+}
+const stacked = [...document.querySelectorAll<HTMLElement>('[data-stack]')];
+function updateStack() {
+  if (reduceMotion) return;
+  for (const el of stacked) {
+    const next = el.nextElementSibling as HTMLElement | null;
+    if (!next) continue;
+    const p = clamp((window.innerHeight - next.getBoundingClientRect().top) / window.innerHeight);
+    el.style.transform = `scale(${1 - p * 0.06})`;
+    el.style.filter = `brightness(${1 - p * 0.55})`;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 3D layer stack: scroll explodes the layers, mouse tilts the scene    */
+/* ------------------------------------------------------------------ */
+const layersEl = document.querySelector<HTMLElement>('[data-layers]');
+const layerStack = layersEl?.querySelector<HTMLElement>('[data-layer-stack]');
+const legend = layersEl ? [...layersEl.querySelectorAll<HTMLElement>('[data-layer-legend]')] : [];
+function updateLayers() {
+  if (!layersEl || !layerStack || reduceMotion) return;
+  const r = layersEl.getBoundingClientRect();
+  const span = r.height - window.innerHeight;
+  const p = span > 0 ? clamp(-r.top / span) : 0;
+  const e = 1 - Math.pow(1 - clamp(p / 0.8), 3);
+  layerStack.style.setProperty('--p', e.toFixed(3));
+  const active = Math.min(legend.length - 1, Math.floor(p * legend.length * 1.05));
+  legend.forEach((li, i) => li.classList.toggle('on', p > 0.05 && i <= active));
+}
+if (layersEl && layerStack && canHover && !reduceMotion) {
+  layersEl.addEventListener('pointermove', (ev) => {
+    const r = layersEl.getBoundingClientRect();
+    layerStack.style.setProperty('--tx', String(((ev.clientX - r.left) / r.width - 0.5) * 16));
+    layerStack.style.setProperty('--ty', String(((ev.clientY - r.top) / r.height - 0.5) * -10));
+  });
+}
+
+/* ------------------------------------------------------------------ */
 /* One frame loop drives everything scroll-linked                      */
 /* ------------------------------------------------------------------ */
 const frame = (time: number) => {
@@ -376,6 +430,9 @@ const frame = (time: number) => {
   updateMarquee();
   updateHighlight();
   updateTiles();
+  updateZoom();
+  updateStack();
+  updateLayers();
   velocity *= lenis ? 1 : 0.9;
   requestAnimationFrame(frame);
 };

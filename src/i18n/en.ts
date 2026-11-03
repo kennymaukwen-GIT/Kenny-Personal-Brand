@@ -71,6 +71,18 @@ export const en = {
     filmTag: 'AI film',
     productTag: 'Product',
   },
+  layers: {
+    kicker: 'How we build',
+    title: 'Every project, layer by layer.',
+    body: 'One studio stacks every layer your business needs — from the first frame people see to the AI running behind the scenes.',
+    items: [
+      { name: 'Brand & film', desc: 'AI films, visuals and identity' },
+      { name: 'Design', desc: 'Web, UI/UX and app design' },
+      { name: 'Web & search', desc: 'Sites built to be recommended by AI' },
+      { name: 'Software', desc: 'Apps, tools and integrations' },
+      { name: 'AI agents', desc: 'Automation that runs itself' },
+    ],
+  },
   heroTags: ['Website', 'AI film', 'App', 'AI agent', 'Brand', 'Automation'],
   capabilities: {
     kicker: 'Capabilities',

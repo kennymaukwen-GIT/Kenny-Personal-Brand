@@ -58,6 +58,18 @@ export const zh: Dict = {
     filmTag: 'AI 影片',
     productTag: '產品',
   },
+  layers: {
+    kicker: '我們怎麼做',
+    title: '每個專案，一層一層打造。',
+    body: '一間工作室，疊起你的生意需要的每一層：從客人看到的第一個畫面，到在背後運作的 AI。',
+    items: [
+      { name: '品牌與影像', desc: 'AI 影片、視覺與識別' },
+      { name: '設計', desc: '網站、UI/UX 與 App 設計' },
+      { name: '網站與搜尋', desc: '為了被 AI 推薦而打造的網站' },
+      { name: '軟體', desc: 'App、工具與系統串接' },
+      { name: 'AI 代理人', desc: '會自己運作的自動化' },
+    ],
+  },
   heroTags: ['網站', 'AI 影片', 'App', 'AI 代理人', '品牌', '自動化'],
   capabilities: {
     kicker: '能力',
