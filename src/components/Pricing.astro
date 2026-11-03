@@ -11,11 +11,11 @@ const d = t(Astro.props.lang).pricing;
 
 <section class="section pricing" id="services">
   <div class="wrap">
-    <p class="kicker scramble">{d.kicker}</p>
+    <p class="kicker">{d.kicker}</p>
     <SplitText class="h-lg" text={d.title} />
     <p class="lead reveal" style="--d:.2s">{d.sub}</p>
 
-    <div class="table spot reveal" role="table" aria-label={d.title}>
+    <div class="table reveal" role="table" aria-label={d.title}>
       <div class="tr thead" role="row">
         <div class="th svc" role="columnheader"></div>
         {
@@ -46,7 +46,7 @@ const d = t(Astro.props.lang).pricing;
 
     <div class="after reveal">
       <p class="muted">{d.footnote}</p>
-      <a class="btn btn-primary magnetic" href={site.bookingUrl} target="_blank" rel="noopener">
+      <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">
         {d.cta} <span class="arrow">→</span>
       </a>
     </div>
@@ -56,13 +56,13 @@ const d = t(Astro.props.lang).pricing;
 <style>
   .wrap {
     display: grid;
-    gap: 24px;
+    gap: 20px;
   }
   .table {
     margin-top: 32px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 10px;
     overflow: hidden;
+    background: var(--g2);
   }
   .tr {
     display: grid;
@@ -72,9 +72,12 @@ const d = t(Astro.props.lang).pricing;
   .tr:last-child {
     border-bottom: 0;
   }
+  .thead {
+    background: var(--g3);
+  }
   .th,
   .td {
-    padding: 20px 24px;
+    padding: 18px 22px;
   }
   .tier,
   .svc {
@@ -84,7 +87,7 @@ const d = t(Astro.props.lang).pricing;
   }
   .tier strong {
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16px;
   }
   .tier span,
   .svc span {
@@ -101,13 +104,14 @@ const d = t(Astro.props.lang).pricing;
     font-size: 15px;
   }
   .hl {
-    background: var(--bg-2);
+    background: #fff;
   }
-  .thead .hl strong::after {
-    content: '  Popular';
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 500;
+  .thead .hl {
+    background: #000;
+    color: #fff;
+  }
+  .thead .hl span {
+    color: #a1a1a1;
   }
   .after {
     display: flex;
@@ -119,7 +123,7 @@ const d = t(Astro.props.lang).pricing;
   .after p {
     margin: 0;
     max-width: 60ch;
-    font-size: 14px;
+    font-size: 13px;
   }
   @media (max-width: 860px) {
     .thead {
@@ -131,7 +135,7 @@ const d = t(Astro.props.lang).pricing;
     }
     .th,
     .td {
-      padding: 8px 20px;
+      padding: 8px 18px;
     }
     .price.empty {
       display: none;

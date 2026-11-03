@@ -8,77 +8,97 @@ interface Props {
 }
 const { lang, path } = Astro.props;
 const d = t(lang);
+const home = localePath(lang, '/');
 const year = new Date().getFullYear();
 const social = Object.entries(site.social).filter(([, url]) => url);
+const cols = [
+  ...d.capabilities.groups.slice(0, 3).map((g) => ({ title: g.name, links: g.items.slice(0, 5).map((i) => ({ label: i.name, href: `${home}#capabilities` })) })),
+  {
+    title: lang === 'en' ? 'Studio' : '工作室',
+    links: [
+      { label: d.nav.caseStudy, href: localePath(lang, '/work/hsinchu-car-dealer') },
+      { label: d.nav.work, href: `${home}#latest` },
+      { label: lang === 'en' ? 'Pricing' : '價格', href: `${home}#services` },
+      { label: d.footer.privacy, href: localePath(lang, '/privacy') },
+      { label: d.nav.langLabel, href: localePath(otherLang(lang), path) },
+    ],
+  },
+  {
+    title: lang === 'en' ? 'Contact' : '聯絡',
+    links: [
+      { label: site.email, href: `mailto:${site.email}` },
+      { label: d.nav.cta, href: site.bookingUrl },
+      ...social.map(([name, url]) => ({ label: name, href: url })),
+    ],
+  },
+];
 ---
 
-<footer class="footer">
-  <div class="wrap">
-    <div class="row">
-      <div class="col">
-        <strong>{site.name}</strong>
-        <span class="muted">{site.location}</span>
-        <a href={`mailto:${site.email}`}>{site.email}</a>
-      </div>
-      <div class="col links">
-        {social.map(([name, url]) => <a href={url} target="_blank" rel="noopener">{name}</a>)}
-        <a href={localePath(lang, '/privacy')}>{d.footer.privacy}</a>
-        <a href={localePath(otherLang(lang), path)}>{d.nav.langLabel}</a>
-      </div>
-    </div>
-    <div class="row small muted">
-      <span>© {year} {site.name}. {d.footer.rights}</span>
-      <span class="built"><span class="dot"></span>{d.footer.built}</span>
-    </div>
+<footer class="footer sheet dark">
+  <div class="grid">
+    <span class="mark" aria-hidden="true"></span>
+    {
+      cols.map((c) => (
+        <div class="col">
+          <p class="kicker">{c.title}</p>
+          {c.links.map((l) => (
+            <a href={l.href}>{l.label}</a>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+  <div class="bottom">
+    <span>© {year} {site.name}</span>
+    <span>{d.footer.built}</span>
   </div>
 </footer>
 
 <style>
   .footer {
-    border-top: 1px solid var(--line);
-    padding: 56px 0 32px;
-    font-size: 14px;
-  }
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 40px;
-  }
-  .col {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    color: var(--fg-2);
-  }
-  .col strong {
-    color: var(--fg);
-    font-weight: 500;
-  }
-  .links {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 24px;
-    text-transform: capitalize;
-  }
-  .links a:hover,
-  .col a:hover {
-    color: var(--fg);
-  }
-  .small {
-    margin: 0;
+    padding: 56px 40px 28px;
     font-size: 13px;
   }
-  .built {
-    display: inline-flex;
-    align-items: center;
+  .grid {
+    display: grid;
+    grid-template-columns: 80px repeat(5, 1fr);
+    gap: 32px;
+  }
+  .mark {
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    clip-path: polygon(0 0, 100% 0, 100% 30%, 30% 30%, 30% 100%, 0 100%);
+  }
+  .col {
+    display: grid;
+    align-content: start;
     gap: 8px;
   }
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
+  .col .kicker {
+    margin-bottom: 6px;
+  }
+  .col .kicker::before {
+    display: none;
+  }
+  .col a {
+    color: #e5e5e5;
+  }
+  .col a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .bottom {
+    margin-top: 72px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

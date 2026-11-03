@@ -1,0 +1,147 @@
+---
+// Black pinned "film": particles assemble into a globe, then spell what the studio
+// builds — one caption per word — and scatter at the end.
+import type { Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang);
+const f = d.film;
+const caps = d.hero.reel;
+---
+
+<section class="film sheet dark" id="film" data-hero aria-labelledby="film-title">
+  <div class="stage">
+    <canvas class="globe" data-globe data-words={JSON.stringify(caps.map((c) => c.word))} aria-hidden="true"></canvas>
+
+    <div class="text intro" data-hero-intro>
+      <p class="kicker">{f.kicker}</p>
+      <h2 id="film-title" class="h-md big">{f.title}</h2>
+      <p class="lead">{f.body}</p>
+    </div>
+
+    <div class="caps" aria-hidden="true">
+      {
+        caps.map((c, i) => (
+          <div class="cap text" data-cap={i}>
+            <p class="kicker">
+              0{i + 1} / 0{caps.length} · {c.word.replace('.', '')}
+            </p>
+            <p class="h-md big">{c.line}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="hud" aria-hidden="true">
+      <span class="mono" data-hud-count>0 particles</span>
+      <span class="track"><span class="fill" data-hero-fill></span></span>
+      <span class="mono" data-hud-pct>000%</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .film {
+    height: 680vh;
+    overflow: visible;
+  }
+  .stage {
+    position: sticky;
+    top: 8px;
+    height: calc(100svh - 16px);
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #000;
+  }
+  .globe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .text {
+    position: absolute;
+    left: 50%;
+    bottom: 16%;
+    width: min(760px, 90%);
+    transform: translateX(-50%);
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+    text-align: center;
+  }
+  .big {
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .intro {
+    opacity: var(--fade, 1);
+    filter: blur(calc((1 - var(--fade, 1)) * 8px));
+    transform: translate(-50%, var(--lift, 0px));
+  }
+  .intro .lead {
+    font-size: 14px;
+  }
+  .cap {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translate(-50%, 16px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease),
+      filter 0.6s var(--ease);
+  }
+  .cap.on {
+    opacity: 1;
+    filter: none;
+    transform: translate(-50%, 0);
+  }
+  .cap .kicker {
+    color: #a1a1a1;
+  }
+  .hud {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hud .mono {
+    min-width: 110px;
+  }
+  .hud .mono:last-child {
+    text-align: right;
+  }
+  .track {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    position: relative;
+  }
+  .fill {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .film {
+      height: auto;
+    }
+    .stage {
+      position: relative;
+      height: 90svh;
+    }
+    .caps,
+    .hud {
+      display: none;
+    }
+  }
+</style>

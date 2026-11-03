@@ -1,0 +1,107 @@
+---
+// Auto-scrolling cards: common problems and how we solve them.
+import type { Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).problems;
+const icons = ['◐', '⌕', '▢', '⟳', '⇄', '▤'];
+const loop = [...d.items, ...d.items];
+---
+
+<section class="carousel" aria-label={d.title}>
+  <div class="head wrap">
+    <p class="kicker">{d.kicker}</p>
+    <h2 class="h-md">{d.title}</h2>
+  </div>
+  <div class="viewport">
+    <div class="track" data-carousel>
+      {
+        loop.map((it, i) => (
+          <article class="card" aria-hidden={i >= d.items.length ? 'true' : undefined}>
+            <span class="icon" aria-hidden="true">
+              {icons[i % icons.length]}
+            </span>
+            <h3 class="h-md">{it.pain}</h3>
+            <p class="fix">{it.fix}</p>
+            <span class="mono">{it.pillar}</span>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .carousel {
+    margin: 8px;
+    padding: 64px 0 24px;
+    border-radius: var(--radius);
+    background: var(--g3);
+    overflow: hidden;
+  }
+  .head {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .viewport {
+    overflow: hidden;
+  }
+  .track {
+    display: flex;
+    gap: 8px;
+    width: max-content;
+    padding: 0 8px 40px;
+    animation: slide 60s linear infinite;
+  }
+  .viewport:hover .track {
+    animation-play-state: paused;
+  }
+  @keyframes slide {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .card {
+    width: 300px;
+    min-height: 260px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fff;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    gap: 12px;
+    transition: transform 0.5s var(--ease);
+  }
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  .icon {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    background: var(--g2);
+    font-size: 16px;
+  }
+  .card .h-md {
+    align-self: end;
+    font-weight: 400;
+    font-size: 19px;
+  }
+  .fix {
+    margin: 0;
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      animation: none;
+      overflow-x: auto;
+    }
+  }
+</style>

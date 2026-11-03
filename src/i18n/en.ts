@@ -26,7 +26,7 @@ export const en = {
     sub: 'Websites, apps, films, software and AI agents — designed and built by one AI-native studio for startups, small businesses and personal brands.',
     primary: 'Book a 30-min diagnosis',
     secondary: 'See the reel',
-    scroll: 'Scroll',
+    scroll: 'Scroll to explore',
   },
   marquee: [
     'Web Design',
@@ -50,6 +50,28 @@ export const en = {
     accent: 'You have us.',
     body: 'One studio replaces the web agency, the video crew, the SEO firm and the software house — because AI does the heavy lifting and a human directs every decision.',
   },
+  announce: { text: 'Smart Schedule, our AI scheduling app, is launching soon.', cta: 'Learn more' },
+  film: {
+    kicker: 'What we build',
+    title: 'One studio. Every kind of build.',
+    body: 'Design, film, web, software and AI agents — directed by a human, produced at AI speed.',
+  },
+  statement: {
+    lead: 'Giants have whole teams making AI work for them.',
+    rest: 'Startups, small businesses and personal brands now get one studio for design, film, web, software and AI.',
+  },
+  rotator: {
+    prefix: 'AI Studio',
+    words: ['Websites', 'Apps', 'Films', 'Software', 'Agents', 'Brands'],
+    cta: 'Book a call',
+  },
+  latest: {
+    title: ['From idea to launch.', 'The latest from the studio.'],
+    caseTag: 'Case study',
+    filmTag: 'AI film',
+    productTag: 'Product',
+  },
+  heroTags: ['Website', 'AI film', 'App', 'AI agent', 'Brand', 'Automation'],
   capabilities: {
     kicker: 'Capabilities',
     title: 'If it can be built with AI, we build it.',

@@ -1,17 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import Marquee from '../components/Marquee.astro';
-import Thesis from '../components/Thesis.astro';
+import Film from '../components/Film.astro';
+import Statement from '../components/Statement.astro';
+import Rotator from '../components/Rotator.astro';
+import Carousel from '../components/Carousel.astro';
 import Capabilities from '../components/Capabilities.astro';
-import Problems from '../components/Problems.astro';
-import Projects from '../components/Projects.astro';
 import CaseFeature from '../components/CaseFeature.astro';
-import WorkGrid from '../components/WorkGrid.astro';
+import Latest from '../components/Latest.astro';
 import Pricing from '../components/Pricing.astro';
 import Process from '../components/Process.astro';
-import Building from '../components/Building.astro';
-import FinalCTA from '../components/FinalCTA.astro';
+import CtaBlock from '../components/CtaBlock.astro';
 import { site, type Lang } from '../config/site';
 import { t } from '../i18n';
 
@@ -43,17 +42,30 @@ const faq = {
 };
 ---
 
-<Base lang={lang} path="/" jsonLd={[faq]}>
+<Base lang={lang} path="/" jsonLd={[faq]} announce>
   <Hero lang={lang} />
-  <Marquee lang={lang} />
-  <Thesis lang={lang} />
-  <Capabilities lang={lang} />
-  <Problems lang={lang} />
-  <Projects lang={lang} />
-  <CaseFeature lang={lang} />
-  <WorkGrid lang={lang} />
-  <Pricing lang={lang} />
-  <Process lang={lang} />
-  <Building lang={lang} />
-  <FinalCTA lang={lang} />
+  <Film lang={lang} />
+  <Statement lang={lang} />
+  <Rotator lang={lang} />
+  <Carousel lang={lang} />
+  <div class="sheet white">
+    <Capabilities lang={lang} />
+    <CaseFeature lang={lang} />
+  </div>
+  <Latest lang={lang} />
+  <div class="sheet grey">
+    <Pricing lang={lang} />
+    <Process lang={lang} />
+  </div>
+  <CtaBlock lang={lang} />
 </Base>
+
+<style>
+  .white {
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+  .grey {
+    background: var(--g1);
+  }
+</style>

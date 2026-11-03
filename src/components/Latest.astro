@@ -1,0 +1,193 @@
+---
+// Bento grid mixing the case study, the app, and AI films — like a newsroom.
+import type { Lang } from '../config/site';
+import { clips, reel } from '../config/media';
+import { t, localePath } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const L = d.latest;
+const caseHref = localePath(lang, '/work/hsinchu-car-dealer');
+const films = reel.filter((c) => c.id !== 'concept').slice(0, 7);
+---
+
+<section class="section latest" id="latest">
+  <div class="wrap">
+    <h2 class="h-lg center title reveal">{L.title[0]}<br />{L.title[1]}</h2>
+    <div class="bento">
+      <a class="card case reveal" href={caseHref}>
+        <div class="panel media wipe"><LazyVideo src={clips.concept.src} /></div>
+        <span class="tag">{L.caseTag}</span>
+        <h3 class="h-md">{d.caseFeature.title}</h3>
+        <p class="muted">{d.caseFeature.kicker}</p>
+      </a>
+      <div class="card black reveal" style="--d:.08s">
+        <span class="tag inv">{L.productTag}</span>
+        <h3 class="h-lg">{d.building.title}</h3>
+        <p>{d.building.body}</p>
+        <span class="status"><i></i>{d.building.status}</span>
+      </div>
+      {
+        films.slice(0, 3).map((c, i) => (
+          <figure class="card film reveal" style={`--d:${0.05 * i}s`}>
+            <div class="panel media">
+              <LazyVideo src={c.src} mode="hover" label={c.title[lang]} />
+            </div>
+            <span class="tag">
+              {L.filmTag} · {c.genre[lang]}
+            </span>
+            <figcaption>{c.title[lang]}</figcaption>
+          </figure>
+        ))
+      }
+      <div class="card black wide reveal">
+        <span class="tag inv">{d.projects.items[3].pillar}</span>
+        <h3 class="h-lg">{d.projects.items[3].name}</h3>
+        <p>{d.projects.items[3].body}</p>
+      </div>
+      {
+        films.slice(3, 7).map((c, i) => (
+          <figure class="card film reveal" style={`--d:${0.05 * i}s`}>
+            <div class="panel media">
+              <LazyVideo src={c.src} mode="hover" label={c.title[lang]} />
+            </div>
+            <span class="tag">
+              {L.filmTag} · {c.genre[lang]}
+            </span>
+            <figcaption>{c.title[lang]}</figcaption>
+          </figure>
+        ))
+      }
+      <div class="card grey reveal">
+        <span class="tag">{d.projects.items[1].pillar}</span>
+        <h3 class="h-md">{d.projects.items[1].name}</h3>
+        <p class="muted">{d.projects.items[1].body}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .title {
+    margin-bottom: 48px;
+  }
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .card {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--g2);
+    margin: 0;
+    min-height: 220px;
+    transition: transform 0.5s var(--ease);
+  }
+  a.card:hover,
+  .film:hover {
+    transform: translateY(-3px);
+  }
+  .case {
+    grid-column: span 2;
+  }
+  .case .media {
+    aspect-ratio: 16 / 8;
+  }
+  .case h3,
+  .case p {
+    padding: 0 8px;
+    margin: 0;
+  }
+  .black {
+    background: #000;
+    color: #fff;
+    padding: 24px;
+    align-content: end;
+  }
+  .black p {
+    margin: 0;
+    color: #a1a1a1;
+    font-size: 14px;
+  }
+  .black .h-lg {
+    font-size: clamp(26px, 2.6vw, 34px);
+  }
+  .wide {
+    grid-column: span 2;
+  }
+  .grey {
+    padding: 24px;
+    align-content: end;
+  }
+  .grey p {
+    margin: 0;
+    font-size: 14px;
+  }
+  .film .media {
+    aspect-ratio: 16 / 10;
+  }
+  figcaption {
+    font-size: 15px;
+    padding: 0 6px 6px;
+  }
+  .tag {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    margin: 4px 6px 0;
+  }
+  .tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--tan);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  .tag.inv {
+    background: #1c1c1c;
+    color: #fff;
+    margin: 0 0 auto;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #a1a1a1;
+  }
+  .status i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34c759;
+  }
+  @media (max-width: 900px) {
+    .bento {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .bento {
+      grid-template-columns: 1fr;
+    }
+    .case,
+    .wide {
+      grid-column: auto;
+    }
+  }
+</style>

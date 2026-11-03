@@ -1,0 +1,46 @@
+---
+// Green sheet: words light up from grey to white as you scroll through it.
+import type { Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).statement;
+const text = `${d.lead} ${d.rest}`;
+const cjk = /[㐀-鿿]/.test(text);
+const parts = cjk ? (text.match(/[A-Za-z0-9.%–\-+/]+|\s+|./gu) ?? [text]) : text.split(/(\s+)/);
+---
+
+<section class="statement sheet" data-highlight>
+  <div class="inner">
+    <p class="h-lg words">
+      {parts.map((p) => (/^\s+$/.test(p) ? ' ' : <span class="hw">{p}</span>))}
+    </p>
+  </div>
+</section>
+
+<style>
+  .statement {
+    background: var(--green);
+    color: #fff;
+    min-height: 80svh;
+    display: flex;
+    align-items: flex-start;
+  }
+  .inner {
+    padding: clamp(32px, 4vw, 56px);
+    max-width: 1100px;
+  }
+  .words {
+    font-size: clamp(32px, 4.4vw, 60px);
+    line-height: 1.12;
+  }
+  .hw {
+    color: rgba(255, 255, 255, 0.28);
+    transition: color 0.35s;
+  }
+  .hw.lit {
+    color: #fff;
+  }
+</style>

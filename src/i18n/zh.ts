@@ -28,7 +28,7 @@ export const zh: Dict = {
     sub: '網站、App、影片、軟體與 AI 代理人，全部由同一間 AI 原生工作室設計與打造。服務新創、中小企業與個人品牌。',
     primary: '預約 30 分鐘診斷',
     secondary: '看作品',
-    scroll: '往下',
+    scroll: '往下探索',
   },
   marquee: ['網站設計', 'UI / UX', '動態設計', 'AI 影片', 'AI 廣告', 'AI 視覺', 'AI SEO', 'App 設計', '客製軟體', '內部系統', '流程自動化', 'AI 代理人', '系統串接', '數據儀表板'],
   thesis: {
@@ -37,6 +37,28 @@ export const zh: Dict = {
     accent: '你有我們。',
     body: '一間工作室，取代網站公司、影片團隊、SEO 公司和軟體外包商。因為 AI 負責大量產出，而每一個決定都由人來把關。',
   },
+  announce: { text: '我們的 AI 排程 App「Smart Schedule」即將上線。', cta: '了解更多' },
+  film: {
+    kicker: '我們做什麼',
+    title: '一間工作室，什麼都能做。',
+    body: '設計、影像、網站、軟體與 AI 代理人，由人導演，用 AI 的速度產出。',
+  },
+  statement: {
+    lead: '大企業有整個團隊讓 AI 為他們工作。',
+    rest: '現在，新創、中小企業與個人品牌也有一間工作室，包辦設計、影像、網站、軟體與 AI。',
+  },
+  rotator: {
+    prefix: 'AI 工作室',
+    words: ['網站', 'App', '影片', '軟體', 'AI 代理人', '品牌'],
+    cta: '預約通話',
+  },
+  latest: {
+    title: ['從想法到上線。', '工作室的最新作品。'],
+    caseTag: '案例',
+    filmTag: 'AI 影片',
+    productTag: '產品',
+  },
+  heroTags: ['網站', 'AI 影片', 'App', 'AI 代理人', '品牌', '自動化'],
   capabilities: {
     kicker: '能力',
     title: '只要能用 AI 做出來，我們就做得出來。',

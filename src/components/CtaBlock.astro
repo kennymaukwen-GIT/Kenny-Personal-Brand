@@ -1,0 +1,76 @@
+---
+import { site, type Lang } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).final;
+const action = site.newsletterAction || `mailto:${site.email}?subject=Build%20Log`;
+const method = site.newsletterAction ? 'post' : 'get';
+---
+
+<section class="cta sheet">
+  <div class="inner">
+    <h2 class="h-lg reveal">{d.title[0]}<br />{d.title[1]}</h2>
+    <p class="sub reveal" style="--d:.05s">{d.sub}</p>
+    <a class="btn btn-primary reveal" style="--d:.1s" href={site.bookingUrl} target="_blank" rel="noopener">
+      {d.primary} <span class="arrow">›</span>
+    </a>
+    <form class="news reveal" id="buildlog" action={action} method={method} style="--d:.15s">
+      <label for="email"><strong>{d.newsletterTitle}</strong> — {d.newsletterBody}</label>
+      <div class="field">
+        <input id="email" name="email" type="email" required placeholder={d.newsletterPlaceholder} autocomplete="email" />
+        <button class="btn btn-primary" type="submit">{d.newsletterButton}</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--tan);
+    color: #000;
+    min-height: 70svh;
+    display: flex;
+    align-items: center;
+  }
+  .inner {
+    width: 100%;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 80px var(--gutter);
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .sub {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 16px;
+  }
+  .news {
+    margin-top: 40px;
+    display: grid;
+    gap: 10px;
+    width: min(520px, 100%);
+    font-size: 14px;
+  }
+  .field {
+    display: flex;
+    gap: 8px;
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.5);
+  }
+  input:focus {
+    outline: none;
+    border-color: #000;
+  }
+</style>

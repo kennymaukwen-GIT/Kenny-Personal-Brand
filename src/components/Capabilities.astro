@@ -26,7 +26,7 @@ let n = 0;
   <div class="wrap">
     <div class="head">
       <div>
-        <p class="kicker scramble">{d.kicker}</p>
+        <p class="kicker">{d.kicker}</p>
         <SplitText class="h-lg" text={d.title} />
       </div>
       <p class="lead reveal">{d.sub}</p>
@@ -128,7 +128,7 @@ let n = 0;
     color: var(--bg);
   }
   .chip.on sup {
-    color: var(--accent);
+    color: #bbb;
   }
   .list {
     list-style: none;
@@ -190,7 +190,7 @@ let n = 0;
   @media (hover: hover) {
     .item:not(.out):hover .name {
       transform: translateX(8px);
-      color: #c4bcff;
+      color: var(--plum);
     }
   }
   /* Floating video preview that follows the cursor */
@@ -207,8 +207,8 @@ let n = 0;
     opacity: 0;
     transform: translate3d(var(--px, -999px), var(--py, -999px), 0) translate(-50%, -110%) scale(0.8) rotate(var(--pr, 0deg));
     transition: opacity 0.35s, scale 0.35s;
-    box-shadow: 0 30px 80px -20px rgba(124, 108, 255, 0.45);
-    background: var(--surface);
+    box-shadow: 0 30px 70px -24px rgba(0, 0, 0, 0.45);
+    background: var(--g2);
   }
   .preview.on {
     opacity: 1;

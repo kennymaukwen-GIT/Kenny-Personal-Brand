@@ -328,6 +328,44 @@ function updateChrome() {
 }
 
 /* ------------------------------------------------------------------ */
+/* Statement: words light up as the green sheet scrolls past           */
+/* ------------------------------------------------------------------ */
+const hl = document.querySelector<HTMLElement>('[data-highlight]');
+const hlWords = hl ? [...hl.querySelectorAll<HTMLElement>('.hw')] : [];
+function updateHighlight() {
+  if (!hl || !hlWords.length) return;
+  const r = hl.getBoundingClientRect();
+  // 0 when the sheet's top reaches 85% of the viewport, 1 when it's near the top.
+  const p = reduceMotion ? 1 : clamp((window.innerHeight * 0.85 - r.top) / (window.innerHeight * 0.75));
+  const n = Math.round(p * hlWords.length);
+  hlWords.forEach((w, i) => w.classList.toggle('lit', i < n));
+}
+
+/* ------------------------------------------------------------------ */
+/* Rotating word + floating tiles parallax                             */
+/* ------------------------------------------------------------------ */
+const rot = document.querySelector<HTMLElement>('[data-rotator]');
+if (rot && !reduceMotion) {
+  const words = [...rot.querySelectorAll<HTMLElement>('.word')];
+  let k = 0;
+  setInterval(() => {
+    const prev = words[k];
+    k = (k + 1) % words.length;
+    prev.classList.remove('on');
+    prev.classList.add('off');
+    setTimeout(() => prev.classList.remove('off'), 650);
+    words[k].classList.add('on');
+  }, 1800);
+}
+const tiles = rot ? [...rot.querySelectorAll<HTMLElement>('[data-depth]')] : [];
+function updateTiles() {
+  if (!rot || reduceMotion) return;
+  const r = rot.getBoundingClientRect();
+  const off = r.top + r.height / 2 - window.innerHeight / 2;
+  tiles.forEach((t) => t.style.setProperty('--ty', `${off * -0.18 * Number(t.dataset.depth)}px`));
+}
+
+/* ------------------------------------------------------------------ */
 /* One frame loop drives everything scroll-linked                      */
 /* ------------------------------------------------------------------ */
 const frame = (time: number) => {
@@ -336,6 +374,8 @@ const frame = (time: number) => {
   updateHero();
   updateReel();
   updateMarquee();
+  updateHighlight();
+  updateTiles();
   velocity *= lenis ? 1 : 0.9;
   requestAnimationFrame(frame);
 };

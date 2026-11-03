@@ -273,7 +273,9 @@ export function initGlobe(canvas: HTMLCanvasElement, words: string[] = DEFAULT_W
     u.uSpin.value = reduce ? 0 : t * 0.12;
     // The sphere sits on the right, words move to the centre.
     const centre = map(prog, 0.06, 0.22);
-    group.position.x = small ? 0 : 1.35 * (1 - centre);
+    // Visual sits centred in the upper part of the frame, text below.
+    group.position.set(0, small ? 0.75 : 0.62, 0);
+    group.scale.setScalar(small ? 0.85 : 0.78 + 0.06 * centre);
     tx += (mx - tx) * 0.05;
     ty += (my - ty) * 0.05;
     group.rotation.y = tx * 0.22;

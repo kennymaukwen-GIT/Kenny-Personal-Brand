@@ -1,0 +1,44 @@
+---
+import type { Lang } from '../config/site';
+import { t, localePath } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang).announce;
+---
+
+<div class="announce">
+  <span class="mark" aria-hidden="true"></span>
+  <span>{d.text}</span>
+  <a href={`${localePath(lang, '/')}#latest`}>{d.cta} ↗</a>
+</div>
+
+<style>
+  .announce {
+    position: relative;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    min-height: 32px;
+    padding: 6px 16px;
+    background: var(--green);
+    color: #fff;
+    font-size: 13px;
+    text-align: center;
+  }
+  .mark {
+    width: 9px;
+    height: 9px;
+    background: #fff;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+</style>

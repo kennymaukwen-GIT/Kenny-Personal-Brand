@@ -1,0 +1,116 @@
+---
+// Light sheet: "AI Studio" + a rotating word, ringed by floating video tiles.
+import { site, type Lang } from '../config/site';
+import { reel } from '../config/media';
+import { t } from '../i18n';
+import LazyVideo from './LazyVideo.astro';
+
+interface Props {
+  lang: Lang;
+}
+const d = t(Astro.props.lang).rotator;
+const colours = ['var(--tan)', 'var(--green)', 'var(--plum)', 'var(--tan)', 'var(--plum)', 'var(--green)'];
+const tiles = [
+  { x: 6, y: 64, s: 120, z: 0.6 },
+  { x: 14, y: 30, s: 84, z: 1.2 },
+  { x: 24, y: 12, s: 60, z: 0.4 },
+  { x: 34, y: 74, s: 70, z: 0.9 },
+  { x: 62, y: 70, s: 80, z: 0.7 },
+  { x: 74, y: 16, s: 96, z: 1.1 },
+  { x: 84, y: 56, s: 64, z: 0.5 },
+  { x: 90, y: 28, s: 52, z: 1.3 },
+];
+---
+
+<section class="rotator sheet" data-rotator>
+  <div class="tiles" aria-hidden="true">
+    {
+      tiles.map((t, i) => (
+        <div class="tile" data-depth={t.z} style={`left:${t.x}%;top:${t.y}%;width:${t.s}px;height:${t.s}px`}>
+          <LazyVideo src={reel[i % reel.length].src} />
+        </div>
+      ))
+    }
+  </div>
+  <div class="copy">
+    <h2 class="h-xl">
+      <span>{d.prefix}</span>
+      <span class="slot" aria-live="polite">
+        {
+          d.words.map((w, i) => (
+            <span class={`word ${i === 0 ? 'on' : ''}`} style={`color:${colours[i % colours.length]}`}>
+              {w}
+            </span>
+          ))
+        }
+      </span>
+    </h2>
+    <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">{d.cta}</a>
+  </div>
+</section>
+
+<style>
+  .rotator {
+    background: var(--g3);
+    min-height: 92svh;
+    display: grid;
+    place-items: center;
+  }
+  .tiles {
+    position: absolute;
+    inset: 0;
+  }
+  .tile {
+    position: absolute;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--g2);
+    transform: translate3d(0, var(--ty, 0px), 0);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.25);
+  }
+  .copy {
+    position: relative;
+    display: grid;
+    gap: 24px;
+    justify-items: center;
+    text-align: center;
+  }
+  h2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 0.28em;
+  }
+  .slot {
+    position: relative;
+    display: inline-grid;
+  }
+  .word {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: translateY(40%);
+    filter: blur(6px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease),
+      filter 0.6s var(--ease);
+    white-space: nowrap;
+  }
+  .word.on {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .word.off {
+    transform: translateY(-40%);
+  }
+  .btn {
+    height: 34px;
+    font-size: 14px;
+  }
+  @media (max-width: 700px) {
+    .tile:nth-child(n + 5) {
+      display: none;
+    }
+  }
+</style>

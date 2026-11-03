@@ -1,8 +1,7 @@
 ---
-// Pinned scroll film: the particle cloud forms a globe, then spells out what the
-// studio builds — WEBSITES, APPS, FILMS, SOFTWARE, AGENTS, ANYTHING. — with a caption
-// for each, then explodes into the next section.
+// Inset video card with live "AI annotation" boxes labelling what the studio builds.
 import { site, type Lang } from '../config/site';
+import { heroClip } from '../config/media';
 import { t } from '../i18n';
 import SplitText from './SplitText.astro';
 
@@ -12,229 +11,182 @@ interface Props {
 const { lang } = Astro.props;
 const d = t(lang);
 const h = d.hero;
-const caps = h.reel;
+// Box positions (percent of the frame) and drift paths.
+const boxes = [
+  { x: 6, y: 58, w: 22, h: 26, dx: 3, dy: -2 },
+  { x: 66, y: 18, w: 18, h: 20, dx: -2, dy: 3 },
+  { x: 74, y: 62, w: 16, h: 22, dx: -3, dy: -2 },
+  { x: 14, y: 16, w: 14, h: 18, dx: 2, dy: 2 },
+  { x: 44, y: 70, w: 12, h: 14, dx: 2, dy: -3 },
+  { x: 52, y: 8, w: 10, h: 12, dx: -2, dy: 2 },
+];
 ---
 
-<section class="hero" data-hero aria-labelledby="hero-title">
-  <div class="stage">
-    <canvas class="globe" data-globe data-words={JSON.stringify(caps.map((c) => c.word))} aria-hidden="true"></canvas>
-    <div class="glow" aria-hidden="true"></div>
-
-    <div class="wrap intro" data-hero-intro>
-      <p class="kicker scramble"><span class="pill">AI Studio</span>{h.eyebrow}</p>
-      <SplitText tag="h1" id="hero-title" class="h-xl" text={h.title.join(' ')} delay={0.1} />
-      <p class="lead reveal" style="--d:.5s">{h.sub}</p>
-      <div class="ctas reveal" style="--d:.65s">
-        <a class="btn btn-primary magnetic" href={site.bookingUrl} target="_blank" rel="noopener">
-          {h.primary} <span class="arrow">→</span>
-        </a>
-        <a class="btn btn-ghost magnetic" href="#work">{h.secondary}</a>
-      </div>
-    </div>
-
-    <div class="wrap captions" aria-hidden="true">
-      {
-        caps.map((c, i) => (
-          <div class="cap" data-cap={i}>
-            <span class="num">0{i + 1} / 0{caps.length}</span>
-            <strong>{c.line}</strong>
-          </div>
-        ))
-      }
-    </div>
-
-    <div class="wrap hud" aria-hidden="true">
-      <span class="mono" data-hud-count>0 particles</span>
-      <span class="track"><span class="fill" data-hero-fill></span></span>
-      <span class="mono" data-hud-pct>000%</span>
+<section class="hero sheet" aria-labelledby="hero-title">
+  <video class="vid" src={heroClip.src} autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  <div class="shade" aria-hidden="true"></div>
+  <div class="boxes" aria-hidden="true">
+    {
+      boxes.map((b, i) => (
+        <span
+          class={`box b${i % 3}`}
+          style={`--x:${b.x}%;--y:${b.y}%;--w:${b.w}%;--h:${b.h}%;--dx:${b.dx}%;--dy:${b.dy}%;--t:${7 + i * 1.3}s;--delay:${0.6 + i * 0.25}s`}>
+          <em>{d.heroTags[i]}</em>
+        </span>
+      ))
+    }
+  </div>
+  <div class="copy">
+    <SplitText tag="h1" id="hero-title" class="h-xl" text={h.title.join(' ')} delay={0.2} />
+    <p class="sub reveal" style="--d:.6s">{h.sub}</p>
+    <div class="ctas reveal" style="--d:.75s">
+      <a class="btn btn-primary light" href={site.bookingUrl} target="_blank" rel="noopener">{h.primary}</a>
+      <a class="btn btn-glass" href="#capabilities">{d.nav.services}</a>
     </div>
   </div>
+  <a class="cue" href="#film">{h.scroll} <span>↓</span></a>
 </section>
 
 <style>
   .hero {
-    position: relative;
-    height: 680vh;
-  }
-  .stage {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    overflow: hidden;
+    height: calc(100svh - 60px - 32px - 16px);
+    min-height: 560px;
+    color: #fff;
+    display: grid;
+    place-items: center;
     isolation: isolate;
   }
-  .globe {
+  .hero > .vid {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-  }
-  .glow {
-    position: absolute;
     z-index: -2;
-    left: 50%;
-    top: 50%;
-    width: 900px;
-    height: 900px;
-    transform: translate(-30%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 108, 255, 0.18), transparent 62%);
-    filter: blur(30px);
-    animation: breathe 6s ease-in-out infinite;
   }
-  @keyframes breathe {
-    50% {
-      opacity: 0.6;
-      transform: translate(-30%, -50%) scale(1.1);
+  .shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.45));
+  }
+  .boxes {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .box {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--w);
+    height: var(--h);
+    border: 1.5px solid #4f8cff;
+    background: rgba(79, 140, 255, 0.14);
+    opacity: 0;
+    animation:
+      boxIn 0.6s var(--ease) var(--delay) forwards,
+      drift var(--t) ease-in-out var(--delay) infinite alternate;
+  }
+  .box.b1 {
+    border-color: #f5a524;
+    background: rgba(245, 165, 36, 0.12);
+  }
+  .box.b2 {
+    border-color: #e5484d;
+    background: rgba(229, 72, 77, 0.12);
+  }
+  .box em {
+    position: absolute;
+    left: -1.5px;
+    top: -20px;
+    padding: 2px 6px;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: #4f8cff;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .b1 em {
+    background: #f5a524;
+    color: #000;
+  }
+  .b2 em {
+    background: #e5484d;
+  }
+  @keyframes boxIn {
+    from {
+      opacity: 0;
+      transform: scale(1.3);
+    }
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
-  .intro {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(calc(-50% + var(--lift, 0px)));
-    opacity: var(--fade, 1);
-    filter: blur(calc((1 - var(--fade, 1)) * 12px));
+  @keyframes drift {
+    to {
+      translate: var(--dx) var(--dy);
+    }
+  }
+  .copy {
     display: grid;
-    gap: 24px;
-    justify-items: start;
-    pointer-events: auto;
+    gap: 20px;
+    justify-items: center;
+    text-align: center;
+    padding: 0 24px;
   }
-  .kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 12px 4px 4px;
-    border-radius: 999px;
-    border: 1px solid var(--line-strong);
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(8px);
-    color: var(--fg-2);
-    font-size: 13px;
+  .copy :global(h1) {
+    max-width: 16ch;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.25);
   }
-  .pill {
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--accent);
-    color: #fff;
-    font-size: 12px;
-  }
-  .hero :global(h1) {
-    max-width: 11ch;
-  }
-  .lead {
-    max-width: 46ch;
+  .sub {
+    max-width: 52ch;
+    margin: 0;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
   }
   .ctas {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 8px;
-  }
-  .captions {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 110px;
-    pointer-events: none;
-  }
-  .cap {
-    position: absolute;
-    left: var(--gutter);
-    bottom: 0;
-    display: grid;
     gap: 8px;
-    max-width: 520px;
-    opacity: 0;
-    transform: translateY(24px);
-    filter: blur(8px);
-    transition:
-      opacity 0.6s var(--ease),
-      transform 0.6s var(--ease),
-      filter 0.6s var(--ease);
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .cap.on {
-    opacity: 1;
-    transform: none;
-    filter: none;
+  .light {
+    background: #fff;
+    color: #000;
   }
-  .num {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--accent);
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    backdrop-filter: blur(8px);
   }
-  .cap strong {
-    font-size: clamp(26px, 3vw, 40px);
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-  }
-  .cap .muted {
-    font-size: 14px;
-  }
-  .hud {
+  .cue {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 40px;
-    display: flex;
+    right: 24px;
+    bottom: 20px;
+    display: inline-flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
+    font-size: 13px;
   }
-  .mono {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--muted);
-    white-space: nowrap;
-    min-width: 120px;
+  .cue span {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
   }
-  .mono:last-child {
-    text-align: right;
-  }
-  .track {
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-    position: relative;
-  }
-  .fill {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--accent), #fff);
-    transform-origin: left;
-    transform: scaleX(0);
-  }
-  @media (max-width: 860px) {
-    .glow {
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 600px;
-    }
-    .intro {
-      top: auto;
-      bottom: 120px;
-      transform: translateY(var(--lift, 0px));
-    }
-    .captions {
-      bottom: 90px;
-    }
-    .mono:first-child {
+  @media (max-width: 700px) {
+    .box:nth-child(n + 4) {
       display: none;
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero {
-      height: auto;
-    }
-    .stage {
-      position: relative;
-      height: 100svh;
-    }
-    .captions,
-    .hud {
-      display: none;
+    .box {
+      animation: none;
+      opacity: 1;
     }
   }
 </style>
